@@ -14,11 +14,17 @@ user 'bud' do
   shell '/bin/bash'
 end
 
+openssl_installation 'All defaults'
+
+sqlite_installation 'All defaults'
+
 python_installation 'No Defaults' do
   version '3.6.9'
   download_directory '/usr/local/python-dl'
   build_directory '/usr/local/python-bld'
   install_directory '/usr/local/python'
+  openssl_directory '/opt/openssl/1.1.1c'
+  sqlite_directory '/opt/sqlite/3280000'
   owner 'bud'
   group 'bud'
 end

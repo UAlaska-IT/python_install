@@ -9,6 +9,8 @@ property :version, String, default: '3280000'
 property :download_directory, [String, nil], default: nil
 property :build_directory, [String, nil], default: nil
 property :install_directory, [String, nil], default: nil
+property :openssl_directory, [String, nil], default: nil
+property :sqlite_directory, [String, nil], default: nil
 property :owner, String, default: 'root'
 property :group, String, default: 'root'
 
