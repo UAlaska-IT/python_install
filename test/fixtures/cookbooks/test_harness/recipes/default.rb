@@ -15,4 +15,10 @@ user 'bud' do
 end
 
 python_installation 'No Defaults' do
+  version '3.6.9'
+  download_directory '/usr/local/python-dl'
+  build_directory '/usr/local/python-bld'
+  install_directory '/usr/local/python'
+  owner 'bud'
+  group 'bud'
 end

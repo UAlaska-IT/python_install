@@ -72,6 +72,12 @@ Custom resources can be used as below.
 
 ```ruby
 python_installation 'No Defaults' do
+  version '3.6.9'
+  download_directory '/usr/local/python-dl'
+  build_directory '/usr/local/python-bld'
+  install_directory '/usr/local/python'
+  owner 'some-dudette'
+  group 'some-dudettes'
 end
 ```
 
