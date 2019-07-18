@@ -4,6 +4,21 @@
 module PythonInstall
   # This module implements helpers that are used for resources
   module Helper
+    BASE_NAME = 'Python'
+    EXTRACT_CREATES_FILE = 'README.rst'
+
+    def archive_file_name(version)
+      return "#{BASE_NAME}-#{version}.tgz"
+    end
+
+    def download_url(version, _new_resource)
+      return "https://www.python.org/ftp/python/#{version}/#{archive_file_name(version)}"
+    end
+
+    def archive_root_directory(version)
+      return "#{BASE_NAME}-#{version}"
+    end
+
     def create_default_directories
       directory '/var/chef' do
         mode 0o755
@@ -62,7 +77,7 @@ module PythonInstall
     def manage_source_directory(download_file, version, build_directory, user, group)
       checksum_file 'Download Checksum' do
         source_path download_file
-        target_path "/var/chef/cache/#{BASE_NAME}-#{version}-dl-checksum"
+        target_path "/var/chef/cache/#{BASE_NAME.downcase}-#{version}-dl-checksum"
       end
       clear_source_directory(build_directory, user, group)
     end
@@ -103,11 +118,11 @@ module PythonInstall
     end
 
     def default_install_directory(version)
-      return "/opt/#{BASE_NAME}/#{version}"
+      return "/opt/#{BASE_NAME.downcase}/#{version}"
     end
 
     def create_opt_directories(version)
-      directory "/opt/#{BASE_NAME}" do
+      directory "/opt/#{BASE_NAME.downcase}" do
         mode 0o755
         owner 'root'
         group 'root'
@@ -140,7 +155,7 @@ module PythonInstall
     def check_build_directory(build_directory, version)
       checksum_file 'Source Checksum' do
         source_path build_directory
-        target_path "/var/chef/cache/#{BASE_NAME}-#{version}-src-checksum"
+        target_path "/var/chef/cache/#{BASE_NAME.downcase}-#{version}-src-checksum"
       end
     end
 
