@@ -7,6 +7,22 @@ module PythonInstall
     BASE_NAME = 'Python'
     EXTRACT_CREATES_FILE = 'README.rst'
 
+    def python_revision(version)
+      version_array = version.split('.')
+      revision = "#{version_array[0]}.#{version_array[1]}"
+      return revision
+    end
+
+    def path_to_python_binary(version)
+      revision = python_revision(version)
+      return File.join(python_install_directory, "bin/python#{revision}")
+    end
+
+    def path_to_pip_binary(version)
+      revision = python_revision(version)
+      return File.join(python_install_directory, "bin/pip#{revision}")
+    end
+
     def archive_file_name(version)
       return "#{BASE_NAME}-#{version}.tgz"
     end
