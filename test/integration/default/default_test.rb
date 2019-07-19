@@ -37,6 +37,22 @@ describe package('make') do
   it { should be_installed }
 end
 
+describe package "libssl-#{dev}" do
+  it { should be_installed } if node['platform_family'] == 'debian'
+end
+
+describe package "openssl-#{dev}" do
+  it { should be_installed } unless node['platform_family'] == 'debian'
+end
+
+describe package "libsqlite3-#{dev}" do
+  it { should be_installed } if node['platform_family'] == 'debian'
+end
+
+describe package "sqlite-#{dev}" do
+  it { should be_installed } unless node['platform_family'] == 'debian'
+end
+
 describe package("libbz2-#{dev}") do
   it { should be_installed } if node['platform_family'] == 'debian'
 end

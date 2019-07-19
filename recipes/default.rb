@@ -16,6 +16,14 @@ package 'g++' if node['platform_family'] == 'debian'
 package 'gcc-c++' unless node['platform_family'] == 'debian'
 package 'make'
 
+# Essential dependencies, in case we are using system versions
+
+package "libssl-#{dev}" if node['platform_family'] == 'debian'
+package "openssl-#{dev}" unless node['platform_family'] == 'debian'
+
+package "libsqlite3-#{dev}" if node['platform_family'] == 'debian'
+package "sqlite-#{dev}" unless node['platform_family'] == 'debian'
+
 # Optional dependencies
 
 package "libbz2-#{dev}" if node['platform_family'] == 'debian'
