@@ -25,6 +25,14 @@ describe package('gcc') do
   it { should be_installed }
 end
 
+describe package 'g++' do
+  it { should be_installed } if node['platform_family'] == 'debian'
+end
+
+describe package 'gcc-c++' do
+  it { should be_installed } unless node['platform_family'] == 'debian'
+end
+
 describe package('make') do
   it { should be_installed }
 end
