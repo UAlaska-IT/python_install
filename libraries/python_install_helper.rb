@@ -347,7 +347,7 @@ module PythonInstall
 
     def execute_install(build_directory, bin_file)
       bash 'Install' do
-        code 'make install'
+        code 'make altinstall'
         cwd build_directory
         # Run as root in case it is installing in directory without write access
         creates bin_file
