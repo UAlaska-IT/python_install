@@ -312,7 +312,7 @@ end
 describe file "/opt/#{BASE_NAME}/#{CURR_VER}/lib/lib#{BASE_NAME}3.so" do
   it { should exist }
   it { should be_file }
-  it { should be_mode 0o755 }
+  it { should be_mode 0o555 }
   it { should be_owned_by 'root' }
   it { should be_grouped_into 'root' }
 end
@@ -320,7 +320,7 @@ end
 describe file "/usr/local/#{BASE_NAME}/lib/lib#{BASE_NAME}3.so" do
   it { should exist }
   it { should be_file }
-  it { should be_mode 0o755 }
+  it { should be_mode 0o555 }
   it { should be_owned_by 'bud' }
   it { should be_grouped_into 'bud' }
 end
