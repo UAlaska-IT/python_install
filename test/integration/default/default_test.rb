@@ -205,11 +205,11 @@ describe file "/usr/local/#{$BASE_NAME}/include/#{$BASE_NAME}/#{$BASE_NAME}conf.
   it { should exist }
   it { should be_file }
   it { should be_mode 0o644 }
-  it { should be_owned_by 'root' }
-  it { should be_grouped_into 'root' }
+  it { should be_owned_by 'bud' }
+  it { should be_grouped_into 'bud' }
 end
 
-describe file "/opt/#{$BASE_NAME}/#{$CURR_VER}/lib/libpython3.so" do
+describe file "/opt/#{$BASE_NAME}/#{$CURR_VER}/lib/lib#{$BASE_NAME}3.so" do
   it { should exist }
   it { should be_file }
   it { should be_mode 0o755 }
@@ -217,7 +217,7 @@ describe file "/opt/#{$BASE_NAME}/#{$CURR_VER}/lib/libpython3.so" do
   it { should be_grouped_into 'root' }
 end
 
-describe file "/usr/local/#{$BASE_NAME}/lib/libpython3.so" do
+describe file "/usr/local/#{$BASE_NAME}/lib/lib#{$BASE_NAME}3.so" do
   it { should exist }
   it { should be_file }
   it { should be_mode 0o755 }
