@@ -13,16 +13,50 @@ module PythonInstall
       return revision
     end
 
-    def path_to_python_binary(version)
+    def path_to_python_binary(install_directory, version)
       revision = python_revision(version)
-      return File.join(python_install_directory, "bin/python#{revision}")
+      return File.join(install_directory, "bin/python#{revision}")
     end
 
-    def path_to_pip_binary(version)
+    def path_to_pip_binary(install_directory, version)
       revision = python_revision(version)
-      return File.join(python_install_directory, "bin/pip#{revision}")
+      return File.join(install_directory, "bin/pip#{revision}")
     end
 
+    def make_python_links(install_directory, version, owner, group)
+      link 'Python Link' do
+        target_file File.join(install_directory, 'bin/python')
+        to path_to_python_binary(install_directory, version)
+        owner owner
+        group group
+      end
+      link 'Python3 Link' do
+        target_file File.join(install_directory, 'bin/python3')
+        to path_to_python_binary(install_directory, version)
+        owner owner
+        group group
+      end
+    end
+
+    def make_pip_links(install_directory, version, owner, group)
+      link 'Pip Link' do
+        target_file File.join(install_directory, 'bin/pip')
+        to path_to_pip_binary(install_directory, version)
+        owner owner
+        group group
+      end
+      link 'Pip3 Link' do
+        target_file File.join(install_directory, 'bin/pip3')
+        to path_to_pip_binary(install_directory, version)
+        owner owner
+        group group
+      end
+    end
+
+    def post_build_logic(install_directory, version, owner, group, _new_resource)
+      make_python_links(install_directory, version, owner, group)
+      make_pip_links(install_directory, version, owner, group)
+    end
     def archive_file_name(version)
       return "#{BASE_NAME}-#{version}.tgz"
     end
@@ -271,6 +305,7 @@ module PythonInstall
       install_directory = path_to_install_directory(new_resource.install_directory, version)
       configure_build(build_directory, install_directory, user, group, new_resource)
       compile_and_install(build_directory, install_directory, user, group, version)
+      post_build_logic(install_directory, version, owner, group, new_resource)
     end
 
     def create_install(new_resource)
