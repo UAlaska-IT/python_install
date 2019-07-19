@@ -120,15 +120,22 @@ module PythonInstall
       return code
     end
 
-    def create_config_code(install_directory, new_resource)
-      code = generate_ld_config(new_resource)
-      code += generate_include_config(new_resource)
-      code += ' ./configure'
+    def generate_configure_options(install_directory, new_resource)
+      code = ''
+      code += ' --enable-shared'
       code += " --prefix=#{install_directory}"
       code += " --with-openssl=#{new_resource.openssl_directory}" if new_resource.openssl_directory
       code += ' --with-system-ffi'
       # Optimizations are broken on ancient CentOS package versions
       code += ' --enable-optimizations' if node['platform_family'] == 'debian'
+      return code
+    end
+
+    def create_config_code(install_directory, new_resource)
+      code = generate_ld_config(new_resource)
+      code += generate_include_config(new_resource)
+      code += ' ./configure'
+      code += generate_configure_options(install_directory, new_resource)
       return code
     end
 
