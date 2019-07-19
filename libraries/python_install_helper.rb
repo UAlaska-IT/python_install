@@ -29,76 +29,85 @@ module PythonInstall
       return revision
     end
 
-    def path_to_python_binary(install_directory, version)
+    def rel_path_to_python_binary(version)
       revision = python_revision(version)
-      return File.join(install_directory, "bin/python#{revision}")
+      return "bin/python#{revision}"
     end
 
-    def path_to_pip_binary(install_directory, version)
-      revision = python_revision(version)
+    def bin_creates_file(new_resource)
+      return rel_path_to_python_binary(new_resource.version)
+    end
+
+    def path_to_python_binary(install_directory, new_resource)
+      return File.join(install_directory, rel_path_to_python_binary(new_resource.version))
+    end
+
+    def path_to_pip_binary(install_directory, new_resource)
+      revision = python_revision(new_resource.version)
       return File.join(install_directory, "bin/pip#{revision}")
     end
 
-    def make_python_link(install_directory, version, owner, group)
+    def make_python_link(install_directory, new_resource)
       link 'Python Link' do
         target_file File.join(install_directory, 'bin/python')
-        to path_to_python_binary(install_directory, version)
-        owner owner
-        group group
+        to path_to_python_binary(install_directory, new_resource.version)
+        owner new_resource.owner
+        group new_resource.group
       end
     end
 
-    def make_python3_link(install_directory, version, owner, group)
+    def make_python3_link(install_directory, new_resource)
       link 'Python3 Link' do
         target_file File.join(install_directory, 'bin/python3')
-        to path_to_python_binary(install_directory, version)
-        owner owner
-        group group
+        to path_to_python_binary(install_directory, new_resource.version)
+        owner new_resource.owner
+        group new_resource.group
       end
     end
 
-    def make_python_links(install_directory, version, owner, group)
-      make_python_link(install_directory, version, owner, group)
-      make_python3_link(install_directory, version, owner, group)
+    def make_python_links(install_directory, new_resource)
+      make_python_link(install_directory, new_resource)
+      make_python3_link(install_directory, new_resource)
     end
 
-    def make_pip_link(install_directory, version, owner, group)
+    def make_pip_link(install_directory, new_resource)
       link 'Pip Link' do
         target_file File.join(install_directory, 'bin/pip')
-        to path_to_pip_binary(install_directory, version)
-        owner owner
-        group group
+        to path_to_pip_binary(install_directory, new_resource.version)
+        owner new_resource.owner
+        group new_resource.group
       end
     end
 
-    def make_pip3_link(install_directory, version, owner, group)
+    def make_pip3_link(install_directory, new_resource)
       link 'Pip3 Link' do
         target_file File.join(install_directory, 'bin/pip3')
-        to path_to_pip_binary(install_directory, version)
-        owner owner
-        group group
+        to path_to_pip_binary(install_directory, new_resource.version)
+        owner new_resource.owner
+        group new_resource.group
       end
     end
 
-    def make_pip_links(install_directory, version, owner, group)
-      make_pip_link(install_directory, version, owner, group)
-      make_pip3_link(install_directory, version, owner, group)
+    def make_pip_links(install_directory, new_resource)
+      make_pip_link(install_directory, new_resource)
+      make_pip3_link(install_directory, new_resource)
     end
 
-    def post_build_logic(install_directory, version, owner, group, _new_resource)
-      make_python_links(install_directory, version, owner, group)
-      make_pip_links(install_directory, version, owner, group)
-    end
-    def archive_file_name(version)
-      return "#{BASE_NAME}-#{version}.tgz"
+    def post_build_logic(install_directory, new_resource)
+      make_python_links(install_directory, new_resource.version, new_resource.owner, new_resource.group)
+      make_pip_links(install_directory, new_resource.version, new_resource.owner, new_resource.group)
     end
 
-    def download_url(version, _new_resource)
-      return "https://www.python.org/ftp/python/#{version}/#{archive_file_name(version)}"
+    def archive_file_name(new_resource)
+      return "#{BASE_NAME}-#{new_resource.version}.tgz"
     end
 
-    def archive_root_directory(version)
-      return "#{BASE_NAME}-#{version}"
+    def download_url(new_resource)
+      return "https://www.python.org/ftp/python/#{new_resource.version}/#{archive_file_name(new_resource.version)}"
+    end
+
+    def archive_root_directory(new_resource)
+      return "#{BASE_NAME}-#{new_resource.version}"
     end
 
     def generate_runtime_config(new_resource)
@@ -160,33 +169,33 @@ module PythonInstall
       end
     end
 
-    def path_to_download_directory(given_directory)
-      return given_directory if given_directory
+    def path_to_download_directory(new_resource)
+      return new_resource.download_directory if new_resource.download_directory
 
       create_default_directories
       return '/var/chef/cache'
     end
 
-    def path_to_download_file(given_directory, version)
-      directory = path_to_download_directory(given_directory)
-      file = File.join(directory, archive_file_name(version))
+    def path_to_download_file(new_resource)
+      directory = path_to_download_directory(new_resource)
+      file = File.join(directory, archive_file_name(new_resource.version))
       return file
     end
 
-    def download_archive(version, owner, group, new_resource)
-      download_file = path_to_download_file(new_resource.download_directory, version)
-      url = download_url(version, new_resource)
+    def download_archive(new_resource)
+      download_file = path_to_download_file(new_resource)
+      url = download_url(new_resource.version, new_resource)
       remote_file download_file do
         source url
-        owner owner
-        group group
+        owner new_resource.owner
+        group new_resource.group
       end
       return download_file
     end
 
-    def path_to_build_directory(given_directory, version)
-      base = archive_root_directory(version)
-      return File.join(given_directory, base) if given_directory
+    def path_to_build_directory(new_resource)
+      base = archive_root_directory(new_resource.version)
+      return File.join(new_resource.build_directory, base) if new_resource.build_directory
 
       create_default_directories
       return File.join('/var/chef/cache', base)
@@ -202,12 +211,12 @@ module PythonInstall
       end
     end
 
-    def manage_source_directory(download_file, version, build_directory, user, group)
+    def manage_source_directory(download_file, build_directory, new_resource)
       checksum_file 'Download Checksum' do
         source_path download_file
-        target_path "/var/chef/cache/#{BASE_NAME.downcase}-#{version}-dl-checksum"
+        target_path "/var/chef/cache/#{BASE_NAME.downcase}-#{new_resource.version}-dl-checksum"
       end
-      clear_source_directory(build_directory, user, group)
+      clear_source_directory(build_directory, new_resource.user, new_resource.group)
     end
 
     def extract_command(filename)
@@ -227,10 +236,10 @@ module PythonInstall
       return code
     end
 
-    def extract_download(download_file, build_directory, user, group)
+    def extract_download(download_file, build_directory, new_resource)
       # Built-in archive_file requires Chef 15 and poise_archive is failing to exhibit idempotence on zip files
       parent = File.dirname(build_directory)
-      code = code_for_extraction(download_file, build_directory, user, group)
+      code = code_for_extraction(download_file, build_directory, new_resource.user, new_resource.group)
       bash 'Extract Archive' do
         code code
         cwd parent
@@ -239,10 +248,10 @@ module PythonInstall
       end
     end
 
-    def extract_archive(new_resource, build_directory, user, group, version)
-      download_file = download_archive(version, user, group, new_resource)
-      manage_source_directory(download_file, version, build_directory, user, group)
-      extract_download(download_file, build_directory, user, group)
+    def extract_archive(build_directory, new_resource)
+      download_file = download_archive(new_resource)
+      manage_source_directory(download_file, build_directory, new_resource)
+      extract_download(download_file, build_directory, new_resource)
     end
 
     def default_install_directory(version)
@@ -262,28 +271,28 @@ module PythonInstall
       end
     end
 
-    def path_to_install_directory(given_directory, version)
-      return given_directory if given_directory
+    def path_to_install_directory(new_resource)
+      return new_resource.install_directory if new_resource.install_directory
 
-      create_opt_directories(version)
-      return default_install_directory(version)
+      create_opt_directories(new_resource.version)
+      return default_install_directory(new_resource.version)
     end
 
-    def configure_build(build_directory, install_directory, user, group, new_resource)
+    def configure_build(build_directory, install_directory, new_resource)
       code = create_config_code(install_directory, new_resource)
       bash 'Configure Build' do
         code code
         cwd build_directory
-        user user
-        group group
+        user new_resource.owner
+        group new_resource.group
         creates File.join(build_directory, 'Makefile')
       end
     end
 
-    def check_build_directory(build_directory, version)
+    def check_build_directory(build_directory, new_resource)
       checksum_file 'Source Checksum' do
         source_path build_directory
-        target_path "/var/chef/cache/#{BASE_NAME.downcase}-#{version}-src-checksum"
+        target_path "/var/chef/cache/#{BASE_NAME.downcase}-#{new_resource.version}-src-checksum"
       end
     end
 
@@ -336,10 +345,11 @@ module PythonInstall
       return command
     end
 
-    def build_permission_command(install_directory, user, group)
+    def build_permission_command(install_directory, new_resource)
       ruby_block 'Build Children' do
         block do
-          node.run_state['build_permission_command'] = iterate_install_directory(install_directory, user, group)
+          files = iterate_install_directory(install_directory, new_resource.user, new_resource.group)
+          node.run_state['build_permission_command'] = files
         end
         action :nothing
         subscribes :run, 'bash[Install]', :immediate
@@ -347,51 +357,51 @@ module PythonInstall
     end
 
     # Some install scripts create artifacts in the source directory
-    def set_src_permissions(build_directory, user, group)
+    def set_src_permissions(build_directory, new_resource)
       bash 'Set Config Permissions' do
-        code "chown -R #{user} #{build_directory}\nchgrp -R #{group} #{build_directory}"
+        code "chown -R #{new_resource.user} #{build_directory}\nchgrp -R #{new_resource.group} #{build_directory}"
         action :nothing
         subscribes :run, 'bash[Install]', :immediate
       end
     end
 
-    def set_install_permissions(build_directory, install_directory, user, group)
-      build_permission_command(install_directory, user, group)
+    def set_install_permissions(build_directory, install_directory, new_resource)
+      build_permission_command(install_directory, new_resource)
       bash 'Change Install Permissions' do
         code(lazy { node.run_state['build_permission_command'] })
         cwd install_directory
         action :nothing
         subscribes :run, 'bash[Install]', :immediate
       end
-      set_src_permissions(build_directory, user, group)
+      set_src_permissions(build_directory, new_resource)
     end
 
-    def make_build(build_directory, install_directory, bin_file, user, group)
-      execute_build(build_directory, bin_file, user, group)
+    def make_build(build_directory, install_directory, bin_file, new_resource)
+      execute_build(build_directory, bin_file, new_resource.user, new_resource.group)
       execute_install(build_directory, bin_file)
-      set_install_permissions(build_directory, install_directory, user, group)
+      set_install_permissions(build_directory, install_directory, new_resource.user, new_resource.group)
     end
 
-    def compile_and_install(build_directory, install_directory, user, group, version)
-      check_build_directory(build_directory, version)
-      bin_file = File.join(install_directory, BIN_CREATES_FILE)
+    def compile_and_install(build_directory, install_directory, new_resource)
+      check_build_directory(build_directory, new_resource)
+      bin_file = File.join(install_directory, bin_creates_file(new_resource))
       manage_bin_file(bin_file)
-      make_build(build_directory, install_directory, bin_file, user, group)
+      make_build(build_directory, install_directory, bin_file, new_resource)
     end
 
-    def build_binary(build_directory, user, group, version, new_resource)
-      install_directory = path_to_install_directory(new_resource.install_directory, version)
-      configure_build(build_directory, install_directory, user, group, new_resource)
-      compile_and_install(build_directory, install_directory, user, group, version)
-      post_build_logic(install_directory, version, owner, group, new_resource)
+    def build_binary(build_directory, new_resource)
+      install_directory = path_to_install_directory(new_resource)
+      configure_build(build_directory, install_directory, new_resource)
+      compile_and_install(build_directory, install_directory, new_resource)
+      post_build_logic(install_directory, new_resource)
     end
 
     def create_install(new_resource)
       user = new_resource.owner
       group = new_resource.group
       version = new_resource.version
-      build_directory = path_to_build_directory(new_resource.build_directory, version)
-      extract_archive(new_resource, build_directory, user, group, version)
+      build_directory = path_to_build_directory(new_resource)
+      extract_archive(build_directory, new_resource)
       build_binary(build_directory, user, group, version, new_resource)
     end
   end
