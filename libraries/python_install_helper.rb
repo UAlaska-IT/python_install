@@ -27,23 +27,23 @@ module PythonInstall
     end
 
     def rel_path_to_python_binary(new_resource)
-      revision = python_revision(new_resource.version)
+      revision = python_revision(new_resource)
       return "bin/python#{revision}"
     end
 
     def path_to_python_binary(install_directory, new_resource)
-      return File.join(install_directory, rel_path_to_python_binary(new_resource.version))
+      return File.join(install_directory, rel_path_to_python_binary(new_resource))
     end
 
     def path_to_pip_binary(install_directory, new_resource)
-      revision = python_revision(new_resource.version)
+      revision = python_revision(new_resource)
       return File.join(install_directory, "bin/pip#{revision}")
     end
 
     def make_python_link(install_directory, new_resource)
       link 'Python Link' do
         target_file File.join(install_directory, 'bin/python')
-        to path_to_python_binary(install_directory, new_resource.version)
+        to path_to_python_binary(install_directory, new_resource)
         owner new_resource.owner
         group new_resource.group
       end
@@ -52,7 +52,7 @@ module PythonInstall
     def make_python3_link(install_directory, new_resource)
       link 'Python3 Link' do
         target_file File.join(install_directory, 'bin/python3')
-        to path_to_python_binary(install_directory, new_resource.version)
+        to path_to_python_binary(install_directory, new_resource)
         owner new_resource.owner
         group new_resource.group
       end
@@ -66,7 +66,7 @@ module PythonInstall
     def make_pip_link(install_directory, new_resource)
       link 'Pip Link' do
         target_file File.join(install_directory, 'bin/pip')
-        to path_to_pip_binary(install_directory, new_resource.version)
+        to path_to_pip_binary(install_directory, new_resource)
         owner new_resource.owner
         group new_resource.group
       end
@@ -75,7 +75,7 @@ module PythonInstall
     def make_pip3_link(install_directory, new_resource)
       link 'Pip3 Link' do
         target_file File.join(install_directory, 'bin/pip3')
-        to path_to_pip_binary(install_directory, new_resource.version)
+        to path_to_pip_binary(install_directory, new_resource)
         owner new_resource.owner
         group new_resource.group
       end
@@ -145,7 +145,7 @@ module PythonInstall
     end
 
     def download_url(new_resource)
-      return "https://www.python.org/ftp/python/#{new_resource.version}/#{archive_file_name(new_resource.version)}"
+      return "https://www.python.org/ftp/python/#{new_resource.version}/#{archive_file_name(new_resource)}"
     end
 
     def archive_root_directory(new_resource)
@@ -183,7 +183,7 @@ module PythonInstall
 
     def path_to_download_file(new_resource)
       directory = path_to_download_directory(new_resource)
-      file = File.join(directory, archive_file_name(new_resource.version))
+      file = File.join(directory, archive_file_name(new_resource))
       return file
     end
 
@@ -227,7 +227,7 @@ module PythonInstall
     def extract_command(filename)
       return 'unzip -q' if filename.match?(/\.zip/)
 
-      return 'tar xzf' if filename.match?(/\.tar\.gz/)
+      return 'tar xzf' if filename.match?(/\.(:?tar\.gz|tgz)/)
 
       raise "Archive not supported: #{filename}"
     end
