@@ -21,6 +21,82 @@ def source_dir(version)
   return "#{BASE_NAME.capitalize}-#{version}"
 end
 
+describe package('gcc') do
+  it { should be_installed }
+end
+
+describe package('make') do
+  it { should be_installed }
+end
+
+describe package("libbz2-#{dev}") do
+  it { should be_installed } if node['platform_family'] == 'debian'
+end
+
+describe package("bzip2-#{dev}") do
+  it { should be_installed } unless node['platform_family'] == 'debian'
+end
+
+describe package("libffi-#{dev}") do
+  it { should be_installed }
+end
+
+describe package("libgdbm-#{dev}") do
+  it { should be_installed } if node['platform_family'] == 'debian'
+end
+
+describe package("libgdbm-compat-#{dev}") do
+  it { should be_installed } if node['platform_family'] == 'debian' && node['platform_version'].to_i > 16
+end
+
+describe package("gdbm-#{dev}") do
+  it { should be_installed } unless node['platform_family'] == 'debian'
+end
+
+describe package("libreadline-#{dev}") do
+  it { should be_installed } if node['platform_family'] == 'debian'
+end
+
+describe package("readline-#{dev}") do
+  it { should be_installed } unless node['platform_family'] == 'debian'
+end
+
+describe package("liblzma-#{dev}") do
+  it { should be_installed } if node['platform_family'] == 'debian'
+end
+
+describe package("xz-#{dev}") do
+  it { should be_installed } unless node['platform_family'] == 'debian'
+end
+
+describe package("libncurses5-#{dev}") do
+  it { should be_installed } if node['platform_family'] == 'debian'
+end
+
+describe package("ncurses-#{dev}") do
+  it { should be_installed } unless node['platform_family'] == 'debian'
+end
+
+describe package("tk-#{dev}") do
+  it { should be_installed }
+end
+
+describe package("uuid-#{dev}") do
+  it { should be_installed } if node['platform_family'] == 'debian'
+end
+
+describe package("libuuid-#{dev}") do
+  it { should be_installed } unless node['platform_family'] == 'debian'
+end
+
+describe package("zlib1g-#{dev}") do
+  it { should be_installed } if node['platform_family'] == 'debian'
+end
+
+describe package("zlib-#{dev}") do
+  it { should be_installed } unless node['platform_family'] == 'debian'
+end
+
 describe file "/usr/local/#{BASE_NAME}-dl" do
   it { should exist }
   it { should be_directory }
