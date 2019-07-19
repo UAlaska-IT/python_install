@@ -14,6 +14,9 @@ user 'bud' do
   shell '/bin/bash'
 end
 
+include_recipe 'openssl_install::default'
+include_recipe 'sqlite_install::default'
+
 openssl_installation 'All defaults'
 
 sqlite_installation 'All defaults'
