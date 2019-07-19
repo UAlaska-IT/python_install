@@ -86,37 +86,33 @@ module PythonInstall
       make_pip3_link(install_directory, new_resource)
     end
 
-    def generate_runtime_config(new_resource)
+    def generate_bin_config(install_directory, new_resource)
       code = ''
-      code += ",-rpath,#{openssl_lib_directory(new_resource)}" if new_resource.openssl_directory
-      code += ",-rpath,#{sqlite_lib_directory(new_resource)}" if new_resource.sqlite_directory
+      code += 'export LD_LIBRARY_PATH="'
+      code += "#{openssl_lib_directory(new_resource)}:" if new_resource.openssl_directory
+      code += "#{sqlite_lib_directory(new_resource)}:" if new_resource.sqlite_directory
+      code += File.join(install_directory, 'lib')
+      code += "\"\n"
       return code
     end
 
-    def generate_linker_config(new_resource)
+    def generate_lib_config(new_resource)
+      any_config = new_resource.openssl_directory || new_resource.sqlite_directory
       code = ''
+      code += 'export LDFLAGS="' if any_config
       code += " -L#{openssl_lib_directory(new_resource)}" if new_resource.openssl_directory
       code += " -L#{sqlite_lib_directory(new_resource)}" if new_resource.sqlite_directory
+      code += "\"\n" if any_config
       return code
     end
 
-    def generate_ld_config(new_resource)
+    def generate_inc_config(new_resource)
       any_config = new_resource.openssl_directory || new_resource.sqlite_directory
       code = ''
-      code += 'LDFLAGS="-Wl' if any_config
-      code += generate_runtime_config(new_resource)
-      code += generate_linker_config(new_resource)
-      code += '"' if any_config
-      return code
-    end
-
-    def generate_include_config(new_resource)
-      any_config = new_resource.openssl_directory || new_resource.sqlite_directory
-      code = ''
-      code += ' CPPFLAGS="' if any_config
+      code += 'export CPPFLAGS="' if any_config
       code += " -I#{openssl_inc_directory(new_resource)}" if new_resource.openssl_directory
       code += " -I#{sqlite_inc_directory(new_resource)}" if new_resource.sqlite_directory
-      code += '"' if any_config
+      code += "\"\n" if any_config
       return code
     end
 
@@ -124,6 +120,7 @@ module PythonInstall
       code = ''
       code += ' --enable-shared'
       code += " --prefix=#{install_directory}"
+      code += " --exec_prefix=#{install_directory}"
       code += " --with-openssl=#{new_resource.openssl_directory}" if new_resource.openssl_directory
       code += ' --with-system-ffi'
       # Optimizations are broken on ancient CentOS package versions
@@ -132,8 +129,9 @@ module PythonInstall
     end
 
     def create_config_code(install_directory, new_resource)
-      code = generate_ld_config(new_resource)
-      code += generate_include_config(new_resource)
+      code = generate_bin_config(install_directory, new_resource)
+      code += generate_lib_config(new_resource)
+      code += generate_inc_config(new_resource)
       code += ' ./configure'
       code += generate_configure_options(install_directory, new_resource)
       return code
