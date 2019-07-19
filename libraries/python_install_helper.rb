@@ -7,6 +7,22 @@ module PythonInstall
     BASE_NAME = 'Python'
     EXTRACT_CREATES_FILE = 'README.rst'
 
+    def openssl_inc_directory(install_root)
+      return File.join(install_root, 'include')
+    end
+
+    def openssl_lib_directory(install_root)
+      return File.join(install_root, 'lib')
+    end
+
+    def sqlite_inc_directory(install_root)
+      return File.join(install_root, 'include')
+    end
+
+    def sqlite_lib_directory(install_root)
+      return File.join(install_root, 'lib')
+    end
+
     def python_revision(version)
       version_array = version.split('.')
       revision = "#{version_array[0]}.#{version_array[1]}"
@@ -23,13 +39,16 @@ module PythonInstall
       return File.join(install_directory, "bin/pip#{revision}")
     end
 
-    def make_python_links(install_directory, version, owner, group)
+    def make_python_link(install_directory, version, owner, group)
       link 'Python Link' do
         target_file File.join(install_directory, 'bin/python')
         to path_to_python_binary(install_directory, version)
         owner owner
         group group
       end
+    end
+
+    def make_python3_link(install_directory, version, owner, group)
       link 'Python3 Link' do
         target_file File.join(install_directory, 'bin/python3')
         to path_to_python_binary(install_directory, version)
@@ -38,19 +57,32 @@ module PythonInstall
       end
     end
 
-    def make_pip_links(install_directory, version, owner, group)
+    def make_python_links(install_directory, version, owner, group)
+      make_python_link(install_directory, version, owner, group)
+      make_python3_link(install_directory, version, owner, group)
+    end
+
+    def make_pip_link(install_directory, version, owner, group)
       link 'Pip Link' do
         target_file File.join(install_directory, 'bin/pip')
         to path_to_pip_binary(install_directory, version)
         owner owner
         group group
       end
+    end
+
+    def make_pip3_link(install_directory, version, owner, group)
       link 'Pip3 Link' do
         target_file File.join(install_directory, 'bin/pip3')
         to path_to_pip_binary(install_directory, version)
         owner owner
         group group
       end
+    end
+
+    def make_pip_links(install_directory, version, owner, group)
+      make_pip_link(install_directory, version, owner, group)
+      make_pip3_link(install_directory, version, owner, group)
     end
 
     def post_build_logic(install_directory, version, owner, group, _new_resource)
@@ -67,6 +99,52 @@ module PythonInstall
 
     def archive_root_directory(version)
       return "#{BASE_NAME}-#{version}"
+    end
+
+    def generate_runtime_config(new_resource)
+      code = ''
+      code += ",-rpath,#{openssl_lib_directory(new_resource.openssl_directory)}" if new_resource.openssl_directory
+      code += ",-rpath,#{sqlite_lib_directory(new_resource.sqlite_directory)}" if new_resource.sqlite_directory
+      return code
+    end
+
+    def generate_linker_config(new_resource)
+      code = ''
+      code += " -L#{openssl_lib_directory(new_resource.openssl_directory)}" if new_resource.openssl_directory
+      code += " -L#{sqlite_lib_directory(new_resource.sqlite_directory)}" if new_resource.sqlite_directory
+      return code
+    end
+
+    def generate_ld_config(new_resource)
+      any_config = new_resource.openssl_directory || new_resource.sqlite_directory
+      code = ''
+      code += 'LDFLAGS="-Wl' if any_config
+      code += generate_runtime_config(new_resource)
+      code += generate_linker_config(new_resource)
+      code += '\"' if any_config
+      return code
+    end
+
+    def generate_include_config(new_resource)
+      any_config = new_resource.openssl_directory || new_resource.sqlite_directory
+      code = ''
+      code += ' CPPFLAGS=\"' if any_config
+      code += " -I#{openssl_inc_directory(new_resource.openssl_directory)}" if new_resource.openssl_directory
+      code += " -I#{sqlite_inc_directory(new_resource.sqlite_directory)}" if new_resource.sqlite_directory
+      code += '\"' if any_config
+      return code
+    end
+
+    def create_config_code(install_directory, new_resource)
+      code = generate_ld_config(new_resource)
+      code += generate_include_config(new_resource)
+      code += ' ./configure'
+      code += " --prefix=#{install_directory}"
+      code += " --with-openssl=#{new_resource.openssl_directory}" if new_resource.openssl_directory
+      code += ' --with-system-ffi'
+      # Optimizations are broken on ancient CentOS package versions
+      code += ' --enable-optimizations' if node['platform_family'] == 'debian'
+      return code
     end
 
     def create_default_directories
