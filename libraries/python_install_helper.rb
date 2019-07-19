@@ -106,17 +106,17 @@ module PythonInstall
       code += 'LDFLAGS="-Wl' if any_config
       code += generate_runtime_config(new_resource)
       code += generate_linker_config(new_resource)
-      code += '\"' if any_config
+      code += '"' if any_config
       return code
     end
 
     def generate_include_config(new_resource)
       any_config = new_resource.openssl_directory || new_resource.sqlite_directory
       code = ''
-      code += ' CPPFLAGS=\"' if any_config
+      code += ' CPPFLAGS="' if any_config
       code += " -I#{openssl_inc_directory(new_resource)}" if new_resource.openssl_directory
       code += " -I#{sqlite_inc_directory(new_resource)}" if new_resource.sqlite_directory
-      code += '\"' if any_config
+      code += '"' if any_config
       return code
     end
 
