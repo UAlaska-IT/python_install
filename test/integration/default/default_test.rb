@@ -168,3 +168,31 @@ describe file("/usr/local/python-bld/python-#{prev_ver}/Makefile") do
 end
 
 # TODO: Tests for config entries
+
+describe file("/opt/python/#{current_ver}/bin/python3") do
+  it { should exist }
+  it { should be_file }
+  it { should be_mode 0o755 }
+  it { should be_owned_by 'root' }
+  it { should be_grouped_into 'root' }
+end
+
+describe file('/usr/local/python/bin/python3') do
+  it { should exist }
+  it { should be_file }
+  it { should be_mode 0o755 }
+  it { should be_owned_by 'bud' }
+  it { should be_grouped_into 'bud' }
+end
+
+describe bash("/opt/python/#{current_ver}/bin/python3 --version") do
+  its(:exit_status) { should eq 0 }
+  its(:stderr) { should eq '' }
+  its(:stdout) { should match(/3\.7\.4/) }
+end
+
+describe bash('/usr/local/python/bin/python3 --version') do
+  its(:exit_status) { should eq 0 }
+  its(:stderr) { should eq '' }
+  its(:stdout) { should match(/3\.6\.9/) }
+end
