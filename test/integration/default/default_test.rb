@@ -211,7 +211,7 @@ describe file "/var/chef/cache/#{BASE_NAME}-#{PREV_VER}-src-checksum" do
   it { should be_grouped_into 'root' }
 end
 
-describe file "/var/chef/cache/#{source_dir(CURR_VER)}/README.md" do
+describe file "/var/chef/cache/#{source_dir(CURR_VER)}/README.rst" do
   it { should exist }
   it { should be_file }
   it { should be_mode 0o644 }
@@ -219,7 +219,7 @@ describe file "/var/chef/cache/#{source_dir(CURR_VER)}/README.md" do
   it { should be_grouped_into 'root' }
 end
 
-describe file "/usr/local/#{BASE_NAME}-bld/#{source_dir(PREV_VER)}/README.md" do
+describe file "/usr/local/#{BASE_NAME}-bld/#{source_dir(PREV_VER)}/README.rst" do
   it { should exist }
   it { should be_file }
   it { should be_mode 0o644 }
@@ -269,7 +269,7 @@ end
 
 # TODO: Tests for config entries
 
-describe file "/opt/#{BASE_NAME}/#{CURR_VER}/include/#{BASE_NAME}/#{BASE_NAME}conf.h" do
+describe file "/opt/#{BASE_NAME}/#{CURR_VER}/include/#{BASE_NAME}/#{BASE_NAME}pyconfig.h" do
   it { should exist }
   it { should be_file }
   it { should be_mode 0o644 }
@@ -277,7 +277,7 @@ describe file "/opt/#{BASE_NAME}/#{CURR_VER}/include/#{BASE_NAME}/#{BASE_NAME}co
   it { should be_grouped_into 'root' }
 end
 
-describe file "/usr/local/#{BASE_NAME}/include/#{BASE_NAME}/#{BASE_NAME}conf.h" do
+describe file "/usr/local/#{BASE_NAME}/include/#{BASE_NAME}/#{BASE_NAME}pyconfig.h" do
   it { should exist }
   it { should be_file }
   it { should be_mode 0o644 }
