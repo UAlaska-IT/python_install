@@ -269,7 +269,7 @@ end
 
 # TODO: Tests for config entries
 
-describe file "/opt/#{BASE_NAME}/#{CURR_VER}/include/#{BASE_NAME}/#{BASE_NAME}pyconfig.h" do
+describe file "/opt/#{BASE_NAME}/#{CURR_VER}/include/#{BASE_NAME}3.7m/pyconfig.h" do
   it { should exist }
   it { should be_file }
   it { should be_mode 0o644 }
@@ -277,7 +277,7 @@ describe file "/opt/#{BASE_NAME}/#{CURR_VER}/include/#{BASE_NAME}/#{BASE_NAME}py
   it { should be_grouped_into 'root' }
 end
 
-describe file "/usr/local/#{BASE_NAME}/include/#{BASE_NAME}/#{BASE_NAME}pyconfig.h" do
+describe file "/usr/local/#{BASE_NAME}/include/#{BASE_NAME}3.6m/pyconfig.h" do
   it { should exist }
   it { should be_file }
   it { should be_mode 0o644 }
