@@ -4,20 +4,20 @@
 module PythonInstall
   # This module implements helpers that are used for resources
   module Helper
-    def openssl_inc_directory(install_root)
-      return File.join(install_root, 'include')
+    def openssl_inc_directory(new_resource)
+      return File.join(new_resource.openssl_directory, 'include')
     end
 
-    def openssl_lib_directory(install_root)
-      return File.join(install_root, 'lib')
+    def openssl_lib_directory(new_resource)
+      return File.join(new_resource.openssl_directory, 'lib')
     end
 
-    def sqlite_inc_directory(install_root)
-      return File.join(install_root, 'include')
+    def sqlite_inc_directory(new_resource)
+      return File.join(new_resource.sqlite_directory, 'include')
     end
 
-    def sqlite_lib_directory(install_root)
-      return File.join(install_root, 'lib')
+    def sqlite_lib_directory(new_resource)
+      return File.join(new_resource.sqlite_directory, 'lib')
     end
 
     def python_revision(new_resource)
