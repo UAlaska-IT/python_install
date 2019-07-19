@@ -152,6 +152,14 @@ describe file "/opt/#{base_name}/#{curr_ver}" do
   it { should be_grouped_into 'root' }
 end
 
+describe file "/usr/local/#{base_name}" do
+  it { should exist }
+  it { should be_directory }
+  it { should be_mode 0o755 }
+  it { should be_owned_by 'root' }
+  it { should be_grouped_into 'root' }
+end
+
 describe file "/var/chef/cache/#{source_dir(curr_ver)}/Makefile" do
   it { should exist }
   it { should be_file }
@@ -169,6 +177,22 @@ describe file "/usr/local/#{base_name}-bld/#{source_dir(prev_ver)}/Makefile" do
 end
 
 # TODO: Tests for config entries
+
+describe file "/opt/#{base_name}/#{curr_ver}/include/#{base_name}/#{base_name}conf.h" do
+  it { should exist }
+  it { should be_file }
+  it { should be_mode 0o644 }
+  it { should be_owned_by 'root' }
+  it { should be_grouped_into 'root' }
+end
+
+describe file "/usr/local/#{base_name}/include/#{base_name}/#{base_name}conf.h" do
+  it { should exist }
+  it { should be_file }
+  it { should be_mode 0o644 }
+  it { should be_owned_by 'root' }
+  it { should be_grouped_into 'root' }
+end
 
 describe file "/opt/#{base_name}/#{curr_ver}/lib/libpython3.so" do
   it { should exist }
