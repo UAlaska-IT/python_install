@@ -118,7 +118,7 @@ module PythonInstall
 
     def generate_configure_options(install_directory, new_resource)
       code = ''
-      code += ' --enable-shared'
+      # code += ' --enable-shared'
       code += " --prefix=#{install_directory}"
       code += " --exec_prefix=#{install_directory}"
       code += " --with-openssl=#{new_resource.openssl_directory}" if new_resource.openssl_directory
