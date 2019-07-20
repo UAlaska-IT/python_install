@@ -99,7 +99,9 @@ module PythonInstall
     def generate_lib_config(new_resource)
       any_config = new_resource.openssl_directory || new_resource.sqlite_directory
       code = ''
-      code += 'export LDFLAGS="' if any_config
+      code += 'export LDFLAGS="-Wl' if any_config
+      code += ",-rpath,#{openssl_lib_directory(new_resource)}" if new_resource.openssl_directory
+      code += ",-rpath,#{sqlite_lib_directory(new_resource)}" if new_resource.sqlite_directory
       code += " -L#{openssl_lib_directory(new_resource)}" if new_resource.openssl_directory
       code += " -L#{sqlite_lib_directory(new_resource)}" if new_resource.sqlite_directory
       code += "\"\n" if any_config
