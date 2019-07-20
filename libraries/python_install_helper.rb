@@ -86,14 +86,8 @@ module PythonInstall
       make_pip3_link(install_directory, new_resource)
     end
 
-    def generate_bin_config(install_directory, new_resource)
-      code = ''
-      code += 'export LD_LIBRARY_PATH="'
-      code += "#{openssl_lib_directory(new_resource)}:" if new_resource.openssl_directory
-      code += "#{sqlite_lib_directory(new_resource)}:" if new_resource.sqlite_directory
-      code += File.join(install_directory, 'lib')
-      code += "\"\n"
-      return code
+    def generate_bin_config(_install_directory, _new_resource)
+      return ''
     end
 
     def generate_lib_config(new_resource)
