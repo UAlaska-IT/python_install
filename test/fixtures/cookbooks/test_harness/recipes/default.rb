@@ -2,7 +2,10 @@
 
 include_recipe 'python_install::default'
 
-python_installation 'All Defaults'
+python_installation 'All Defaults' do
+  # RHEL has ancient libs that are not supported by newer Pythons
+  openssl_directory '/opt/openssl/1.1.1c' unless node['platform_family'] == 'debian'
+end
 
 directory '/usr/local/python-dl'
 
