@@ -358,3 +358,28 @@ describe bash "/usr/local/#{BASE_NAME}/bin/#{BASE_NAME}3 --version" do
   its(:stderr) { should eq '' }
   its(:stdout) { should match(/3\.6\.9/) }
 end
+
+describe bash "/opt/#{BASE_NAME}/#{CURR_VER}/bin/#{BASE_NAME}3 -c 'import ssl; print(ssl.OPENSSL_VERSION)'" do
+  its(:exit_status) { should eq 0 }
+  its(:stderr) { should eq '' }
+  its(:stdout) { should_not match(/1\.1\.1c/) } if node['platform_family'] == 'debian'
+  its(:stdout) { should match(/1\.1\.1c/) } unless node['platform_family'] == 'debian'
+end
+
+describe bash "/usr/local/#{BASE_NAME}/bin/#{BASE_NAME}3 -c 'import ssl; print(ssl.OPENSSL_VERSION)'" do
+  its(:exit_status) { should eq 0 }
+  its(:stderr) { should eq '' }
+  its(:stdout) { should match(/1\.1\.1c/) }
+end
+
+describe bash "/opt/#{BASE_NAME}/#{CURR_VER}/bin/#{BASE_NAME}3 -c 'import sqlite3; print(sqlite3.sqlite_version)'" do
+  its(:exit_status) { should eq 0 }
+  its(:stderr) { should eq '' }
+  # its(:stdout) { should match(/3\.28\.0/) } # Different on every distro
+end
+
+describe bash "/usr/local/#{BASE_NAME}/bin/#{BASE_NAME}3 -c 'import sqlite3; print(sqlite3.sqlite_version)'" do
+  its(:exit_status) { should eq 0 }
+  its(:stderr) { should eq '' }
+  its(:stdout) { should match(/3\.28\.0/) }
+end
