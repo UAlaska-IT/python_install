@@ -90,7 +90,7 @@ module PythonInstall
       return ''
     end
 
-    def generate_lib_config(new_resource)
+    def generate_lib_config(install_directory, new_resource)
       code = ''
       code += 'export LDFLAGS="-Wl'
       code += ",-rpath,#{openssl_lib_directory(new_resource)}" if new_resource.openssl_directory
@@ -126,7 +126,7 @@ module PythonInstall
 
     def create_config_code(install_directory, new_resource)
       code = generate_bin_config(install_directory, new_resource)
-      code += generate_lib_config(new_resource)
+      code += generate_lib_config(install_directory, new_resource)
       code += generate_inc_config(new_resource)
       code += ' ./configure'
       code += generate_configure_options(install_directory, new_resource)
