@@ -311,7 +311,27 @@ describe file "/usr/local/#{BASE_NAME}-bld/#{source_dir(PREV_VER)}/Makefile" do
   it { should be_grouped_into 'bud' }
 end
 
-# TODO: Tests for config entries
+describe file "/var/chef/cache/#{BASE_NAME}-#{CURR_VER}-config" do
+  it { should exist }
+  it { should be_file }
+  it { should be_mode 0o644 }
+  it { should be_owned_by 'root' }
+  it { should be_grouped_into 'root' }
+  its(:content) { should match(%r{-rpath,/opt/python/#{CURR_VER}}) }
+end
+
+describe file "/var/chef/cache/#{BASE_NAME}-#{PREV_VER}-config" do
+  it { should exist }
+  it { should be_file }
+  it { should be_mode 0o644 }
+  it { should be_owned_by 'root' }
+  it { should be_grouped_into 'root' }
+  its(:content) { should match(%r{-L/opt/openssl/include}) }
+  its(:content) { should match(%r{-rpath,/opt/openssl/lib}) }
+  its(:content) { should match(%r{-L/opt/sqlite/include}) }
+  its(:content) { should match(%r{-rpath,/opt/sqlite/lib}) }
+  its(:content) { should match(%r{-rpath,/opt/python/#{PREV_VER}}) }
+end
 
 describe file "/opt/#{BASE_NAME}/#{CURR_VER}/include/#{BASE_NAME}3.7m/pyconfig.h" do
   it { should exist }
