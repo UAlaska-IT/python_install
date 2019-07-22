@@ -328,11 +328,11 @@ describe file "/var/chef/cache/#{BASE_NAME}-#{PREV_VER}-config" do
   it { should be_mode 0o644 }
   it { should be_owned_by 'root' }
   it { should be_grouped_into 'root' }
-  its(:content) { should match(%r{-L/opt/openssl/include}) }
-  its(:content) { should match(%r{-rpath,/opt/openssl/lib}) }
-  its(:content) { should match(%r{-L/opt/sqlite/include}) }
-  its(:content) { should match(%r{-rpath,/opt/sqlite/lib}) }
-  its(:content) { should match(%r{-rpath,/opt/python/#{PREV_VER}}) }
+  its(:content) { should match(%r{-I/opt/openssl/1\.1\.1c/include}) }
+  its(:content) { should match(%r{-rpath,/opt/openssl/1\.1\.1c/lib}) }
+  its(:content) { should match(%r{-I/opt/sqlite/3280000/include}) }
+  its(:content) { should match(%r{-rpath,/opt/sqlite/3280000/lib}) }
+  its(:content) { should match(%r{-rpath,/usr/local/#{BASE_NAME}/lib}) }
   its(:content) { should match(%r{--prefix=/usr/local/#{BASE_NAME}}) }
   its(:content) { should match(%r{--exec_prefix=/usr/local/#{BASE_NAME}}) }
 end
