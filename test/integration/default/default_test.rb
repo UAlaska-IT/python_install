@@ -345,6 +345,22 @@ describe file "/usr/local/#{BASE_NAME}/lib/lib#{BASE_NAME}3.so" do
   it { should be_grouped_into 'bud' }
 end
 
+describe file "/opt/#{BASE_NAME}/#{CURR_VER}/bin/#{BASE_NAME}3.7" do
+  it { should exist }
+  it { should be_file }
+  it { should be_mode 0o755 }
+  it { should be_owned_by 'root' }
+  it { should be_grouped_into 'root' }
+end
+
+describe file "/usr/local/#{BASE_NAME}/bin/#{BASE_NAME}3.6" do
+  it { should exist }
+  it { should be_file }
+  it { should be_mode 0o755 }
+  it { should be_owned_by 'bud' }
+  it { should be_grouped_into 'bud' }
+end
+
 describe file "/opt/#{BASE_NAME}/#{CURR_VER}/bin/#{BASE_NAME}3" do
   it { should exist }
   it { should be_file }
@@ -354,6 +370,22 @@ describe file "/opt/#{BASE_NAME}/#{CURR_VER}/bin/#{BASE_NAME}3" do
 end
 
 describe file "/usr/local/#{BASE_NAME}/bin/#{BASE_NAME}3" do
+  it { should exist }
+  it { should be_file }
+  it { should be_mode 0o755 }
+  it { should be_owned_by 'bud' }
+  it { should be_grouped_into 'bud' }
+end
+
+describe file "/opt/#{BASE_NAME}/#{CURR_VER}/bin/#{BASE_NAME}" do
+  it { should exist }
+  it { should be_file }
+  it { should be_mode 0o755 }
+  it { should be_owned_by 'root' }
+  it { should be_grouped_into 'root' }
+end
+
+describe file "/usr/local/#{BASE_NAME}/bin/#{BASE_NAME}" do
   it { should exist }
   it { should be_file }
   it { should be_mode 0o755 }
