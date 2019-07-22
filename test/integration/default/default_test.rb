@@ -393,6 +393,54 @@ describe file "/usr/local/#{BASE_NAME}/bin/#{BASE_NAME}" do
   it { should be_grouped_into 'bud' }
 end
 
+describe file "/opt/#{BASE_NAME}/#{CURR_VER}/bin/pip3.7" do
+  it { should exist }
+  it { should be_file }
+  it { should be_mode 0o755 }
+  it { should be_owned_by 'root' }
+  it { should be_grouped_into 'root' }
+end
+
+describe file "/usr/local/#{BASE_NAME}/bin/pip3.6" do
+  it { should exist }
+  it { should be_file }
+  it { should be_mode 0o755 }
+  it { should be_owned_by 'bud' }
+  it { should be_grouped_into 'bud' }
+end
+
+describe file "/opt/#{BASE_NAME}/#{CURR_VER}/bin/pip3" do
+  it { should exist }
+  it { should be_file }
+  it { should be_mode 0o755 }
+  it { should be_owned_by 'root' }
+  it { should be_grouped_into 'root' }
+end
+
+describe file "/usr/local/#{BASE_NAME}/bin/pip3" do
+  it { should exist }
+  it { should be_file }
+  it { should be_mode 0o755 }
+  it { should be_owned_by 'bud' }
+  it { should be_grouped_into 'bud' }
+end
+
+describe file "/opt/#{BASE_NAME}/#{CURR_VER}/bin/pip" do
+  it { should exist }
+  it { should be_file }
+  it { should be_mode 0o755 }
+  it { should be_owned_by 'root' }
+  it { should be_grouped_into 'root' }
+end
+
+describe file "/usr/local/#{BASE_NAME}/bin/pip" do
+  it { should exist }
+  it { should be_file }
+  it { should be_mode 0o755 }
+  it { should be_owned_by 'bud' }
+  it { should be_grouped_into 'bud' }
+end
+
 describe bash "/opt/#{BASE_NAME}/#{CURR_VER}/bin/#{BASE_NAME}3 --version" do
   its(:exit_status) { should eq 0 }
   its(:stderr) { should eq '' }
