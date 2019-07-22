@@ -21,6 +21,8 @@ def source_dir(version)
   return "#{BASE_NAME.capitalize}-#{version}"
 end
 
+# Packages installed by default recipe
+
 describe package('gcc') do
   it { should be_installed }
 end
@@ -121,6 +123,8 @@ describe package("zlib-#{dev}") do
   it { should be_installed } unless node['platform_family'] == 'debian'
 end
 
+# Created or assumed by test harness
+
 describe file "/usr/local/#{BASE_NAME}-dl" do
   it { should exist }
   it { should be_directory }
@@ -151,6 +155,22 @@ describe user 'bud' do
   its('groups') { should eq ['bud'] }
   its('home') { should eq '/home/bud' }
   its('shell') { should eq '/bin/bash' }
+end
+
+describe file '/opt/openssl/1.1.1c' do
+  it { should exist }
+  it { should be_directory }
+  it { should be_mode 0o755 }
+  it { should be_owned_by 'root' }
+  it { should be_grouped_into 'root' }
+end
+
+describe file '/opt/sqlite/3280000' do
+  it { should exist }
+  it { should be_directory }
+  it { should be_mode 0o755 }
+  it { should be_owned_by 'root' }
+  it { should be_grouped_into 'root' }
 end
 
 # Begin white-box testing of resources
