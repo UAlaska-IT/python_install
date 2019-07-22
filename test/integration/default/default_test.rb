@@ -317,6 +317,10 @@ describe file "/var/chef/cache/#{BASE_NAME}-#{CURR_VER}-config" do
   it { should be_mode 0o644 }
   it { should be_owned_by 'root' }
   it { should be_grouped_into 'root' }
+  its(:content) { should_not match(%r{-I/opt/openssl/1\.1\.1c/include}) } if node['platform_family'] == 'debian'
+  its(:content) { should_not match(%r{-rpath,/opt/openssl/1\.1\.1c/lib}) } if node['platform_family'] == 'debian'
+  its(:content) { should match(%r{-I/opt/openssl/1\.1\.1c/include}) } unless node['platform_family'] == 'debian'
+  its(:content) { should match(%r{-rpath,/opt/openssl/1\.1\.1c/lib}) } unless node['platform_family'] == 'debian'
   its(:content) { should match(%r{-rpath,/opt/python/#{CURR_VER}}) }
   its(:content) { should match(%r{--prefix=/opt/python/#{CURR_VER}}) }
   its(:content) { should match(%r{--exec_prefix=/opt/python/#{CURR_VER}}) }
