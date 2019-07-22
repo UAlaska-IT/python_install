@@ -112,7 +112,7 @@ module PythonInstall
       return code
     end
 
-    def generate_configure_options(install_directory, new_resource)
+    def generate_configure_options(install_directory)
       code = ''
       code += ' --enable-shared'
       code += " --prefix=#{install_directory}"
@@ -128,7 +128,7 @@ module PythonInstall
       code += generate_lib_config(install_directory, new_resource)
       code += generate_inc_config(new_resource)
       code += ' ./configure'
-      code += generate_configure_options(install_directory, new_resource)
+      code += generate_configure_options(install_directory)
       return code
     end
 
