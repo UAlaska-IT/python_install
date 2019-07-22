@@ -318,6 +318,8 @@ describe file "/var/chef/cache/#{BASE_NAME}-#{CURR_VER}-config" do
   it { should be_owned_by 'root' }
   it { should be_grouped_into 'root' }
   its(:content) { should match(%r{-rpath,/opt/python/#{CURR_VER}}) }
+  its(:content) { should match(%r{--prefix=/opt/python/#{CURR_VER}}) }
+  its(:content) { should match(%r{--exec_prefix=/opt/python/#{CURR_VER}}) }
 end
 
 describe file "/var/chef/cache/#{BASE_NAME}-#{PREV_VER}-config" do
@@ -331,6 +333,8 @@ describe file "/var/chef/cache/#{BASE_NAME}-#{PREV_VER}-config" do
   its(:content) { should match(%r{-L/opt/sqlite/include}) }
   its(:content) { should match(%r{-rpath,/opt/sqlite/lib}) }
   its(:content) { should match(%r{-rpath,/opt/python/#{PREV_VER}}) }
+  its(:content) { should match(%r{--prefix=/usr/local/#{BASE_NAME}}) }
+  its(:content) { should match(%r{--exec_prefix=/usr/local/#{BASE_NAME}}) }
 end
 
 describe file "/opt/#{BASE_NAME}/#{CURR_VER}/include/#{BASE_NAME}3.7m/pyconfig.h" do
