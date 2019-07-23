@@ -35,7 +35,6 @@ end
 CURR_REV = revision(CURR_VER)
 PREV_REV = revision(PREV_VER)
 
-
 def archive_file(version)
   return "#{BASE_NAME.capitalize}-#{version}.tgz"
 end
