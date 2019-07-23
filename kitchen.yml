@@ -90,4 +90,3 @@ suites:
     includes:
       - amazon2
       - amazon2-2018
-      - sles-15

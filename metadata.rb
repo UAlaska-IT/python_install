@@ -20,7 +20,7 @@ supports 'centos', '>= 6.0'
 supports 'oracle', '>= 6.0'
 supports 'fedora'
 supports 'amazon'
-supports 'suse'
+# supports 'suse'
 # supports 'opensuse'
 
 chef_version '>= 14.0' if respond_to?(:chef_version)
