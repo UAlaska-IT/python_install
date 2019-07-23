@@ -2,6 +2,20 @@
 
 node = json('/opt/chef/run_record/last_chef_run_node.json')['automatic']
 
+LOCAL_GROUP =
+  if node['platform'] == 'debian'
+    'staff'
+  else
+    'root'
+  end
+
+LOCAL_MODE =
+  if node['platform'] == 'debian'
+    0o2755
+  else
+    0o755
+  end
+
 dev =
   if node['platform_family'] == 'debian'
     'dev'
@@ -128,25 +142,25 @@ end
 describe file "/usr/local/#{BASE_NAME}-dl" do
   it { should exist }
   it { should be_directory }
-  it { should be_mode 0o755 }
+  it { should be_mode LOCAL_MODE }
   it { should be_owned_by 'root' }
-  it { should be_grouped_into 'root' }
+  it { should be_grouped_into LOCAL_GROUP }
 end
 
 describe file "/usr/local/#{BASE_NAME}-bld" do
   it { should exist }
   it { should be_directory }
-  it { should be_mode 0o755 }
+  it { should be_mode LOCAL_MODE }
   it { should be_owned_by 'root' }
-  it { should be_grouped_into 'root' }
+  it { should be_grouped_into LOCAL_GROUP }
 end
 
 describe file "/usr/local/#{BASE_NAME}" do
   it { should exist }
   it { should be_directory }
-  it { should be_mode 0o755 }
+  it { should be_mode LOCAL_MODE }
   it { should be_owned_by 'root' }
-  it { should be_grouped_into 'root' }
+  it { should be_grouped_into LOCAL_GROUP }
 end
 
 describe user 'bud' do
@@ -280,14 +294,6 @@ describe file "/opt/#{BASE_NAME}" do
 end
 
 describe file "/opt/#{BASE_NAME}/#{CURR_VER}" do
-  it { should exist }
-  it { should be_directory }
-  it { should be_mode 0o755 }
-  it { should be_owned_by 'root' }
-  it { should be_grouped_into 'root' }
-end
-
-describe file "/usr/local/#{BASE_NAME}" do
   it { should exist }
   it { should be_directory }
   it { should be_mode 0o755 }
