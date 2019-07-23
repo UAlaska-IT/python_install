@@ -27,6 +27,15 @@ BASE_NAME = 'python'
 CURR_VER = '3.7.4'
 PREV_VER = '3.6.9'
 
+def revision(version)
+  version_array = version.split('.')
+  return "#{version_array[0]}.#{version_array[1]}"
+end
+
+CURR_REV = revision(CURR_VER)
+PREV_REV = revision(PREV_VER)
+
+
 def archive_file(version)
   return "#{BASE_NAME.capitalize}-#{version}.tgz"
 end
@@ -347,7 +356,7 @@ describe file "/var/chef/cache/#{BASE_NAME}-#{PREV_VER}-config" do
   its(:content) { should match(%r{--exec_prefix=/usr/local/#{BASE_NAME}}) }
 end
 
-describe file "/opt/#{BASE_NAME}/#{CURR_VER}/include/#{BASE_NAME}3.7m/pyconfig.h" do
+describe file "/opt/#{BASE_NAME}/#{CURR_VER}/include/#{BASE_NAME}#{CURR_REV}m/pyconfig.h" do
   it { should exist }
   it { should be_file }
   it { should be_mode 0o644 }
@@ -355,7 +364,7 @@ describe file "/opt/#{BASE_NAME}/#{CURR_VER}/include/#{BASE_NAME}3.7m/pyconfig.h
   it { should be_grouped_into 'root' }
 end
 
-describe file "/usr/local/#{BASE_NAME}/include/#{BASE_NAME}3.6m/pyconfig.h" do
+describe file "/usr/local/#{BASE_NAME}/include/#{BASE_NAME}#{PREV_REV}m/pyconfig.h" do
   it { should exist }
   it { should be_file }
   it { should be_mode 0o644 }
@@ -379,7 +388,7 @@ describe file "/usr/local/#{BASE_NAME}/lib/lib#{BASE_NAME}3.so" do
   it { should be_grouped_into 'bud' }
 end
 
-describe file "/opt/#{BASE_NAME}/#{CURR_VER}/bin/#{BASE_NAME}3.7" do
+describe file "/opt/#{BASE_NAME}/#{CURR_VER}/bin/#{BASE_NAME}#{CURR_REV}" do
   it { should exist }
   it { should be_file }
   it { should be_mode 0o755 }
@@ -387,7 +396,7 @@ describe file "/opt/#{BASE_NAME}/#{CURR_VER}/bin/#{BASE_NAME}3.7" do
   it { should be_grouped_into 'root' }
 end
 
-describe file "/usr/local/#{BASE_NAME}/bin/#{BASE_NAME}3.6" do
+describe file "/usr/local/#{BASE_NAME}/bin/#{BASE_NAME}#{PREV_REV}" do
   it { should exist }
   it { should be_file }
   it { should be_mode 0o755 }
@@ -427,7 +436,7 @@ describe file "/usr/local/#{BASE_NAME}/bin/#{BASE_NAME}" do
   it { should be_grouped_into 'bud' }
 end
 
-describe file "/opt/#{BASE_NAME}/#{CURR_VER}/bin/pip3.7" do
+describe file "/opt/#{BASE_NAME}/#{CURR_VER}/bin/pip#{CURR_REV}" do
   it { should exist }
   it { should be_file }
   it { should be_mode 0o755 }
@@ -435,7 +444,7 @@ describe file "/opt/#{BASE_NAME}/#{CURR_VER}/bin/pip3.7" do
   it { should be_grouped_into 'root' }
 end
 
-describe file "/usr/local/#{BASE_NAME}/bin/pip3.6" do
+describe file "/usr/local/#{BASE_NAME}/bin/pip#{PREV_REV}" do
   it { should exist }
   it { should be_file }
   it { should be_mode 0o755 }
