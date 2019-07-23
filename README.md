@@ -9,6 +9,7 @@ __Maintainer: OIT Systems Engineering__ (<ua-oit-se@alaska.edu>)
 ## Purpose
 
 This cookbook provides a single resource that downloads, configures, compiles, and installs Python.
+As Python is built from source, build times can be long, especially for Python 3.7.
 
 ## Requirements
 
@@ -61,6 +62,44 @@ One action is provided.
 
 __Attributes__
 
+* `version` - Defaults to `'3.7.4'`.
+The version of Python to install.
+Note the 'dotless' format.
+* `download_directory` - Defaults to `nil`.
+The local path to the directory into which to download the source archive.
+See note below about paths.
+* `build_directory` - Defaults to `nil`.
+The local path to the directory into which to decompress and build the source code.
+See note below about paths.
+* `install_directory` - Defaults to `nil`.
+The local path to the directory into which to install the binary artifacts.
+See note below about paths.
+* `openssl_directory` - Defaults to `nil`.
+The local path to the directory where OpenSSL is installed.
+If nil, system OpenSSL will be used and must be installed prior to this resource running.
+* `sqlite_directory` - Defaults to `nil`.
+The local path to the directory where SQLite is installed.
+If nil, system SQLite will be used and must be installed prior to this resource running.
+* `owner` - Defaults to `root`.
+The owner of all artifacts.
+* `group` - Defaults to `root`.
+The group of all artifacts.
+
+__Note on paths__
+
+If a path is set for download, build or install, then the client must assure the directory exists before the resource runs.
+The resource runs as root and sets permissions on any created files, so is capable of placing a user-owned directory in a root-owned directory.
+
+Fairly standard defaults are used for paths.
+If download_directory or build_directory is nil (default), '/var/chef/cache' will be used.
+If install directory is nil (default), "/opt/python/#{version}" will be created and used.
+
+For build_directory, the path given is the _parent_ of the source root that is created when the archive is extracted.
+For example, if build_directory is set to '/usr/local/python-src', then the source root will be "/usr/local/python-src/Python-#{version}".
+
+For install_directory, the path given is the root of the install.
+For example, if install_directory is set to '/usr/local/python', then the path to the Python executable will be '/usr/local/python/bin/python'.
+The lib path must be added to linker and runtime configurations (typically use -L and rpath, respectively) for dependents to load the custom libraries.
 
 ## Recipes
 
