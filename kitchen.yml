@@ -62,7 +62,6 @@ suites:
     includes:
       - ubuntu-18.04
       - ubuntu-16.04
-      - ubuntu-14.04
       - debian-9
   - name: rhel-based
     run_list:
@@ -74,7 +73,6 @@ suites:
     attributes:
     includes:
       - centos-7
-      - centos-6
       - oracle-7.6
       - oracle-6.10
       - fedora-29
