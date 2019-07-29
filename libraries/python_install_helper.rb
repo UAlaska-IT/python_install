@@ -215,7 +215,7 @@ module PythonInstall
     def clear_source_directory(build_directory, new_resource)
       dir = build_directory
       bash 'Clear Archive' do
-        code "rm -rf #{dir}\nmkdir #{dir}\nchmod #{new_resource.owner} #{dir}\nchgrp #{new_resource.group} #{dir}"
+        code "rm -rf #{dir}\nmkdir #{dir}\nchown #{new_resource.owner}:#{new_resource.group} #{dir}"
         # Run as root so we blow it away if the owner changes
         action :nothing
         subscribes :run, 'checksum_file[Download Checksum]', :immediate
@@ -241,8 +241,7 @@ module PythonInstall
     def code_for_extraction(download_file, build_directory, new_resource)
       code = <<~CODE
         #{extract_command(download_file)} #{download_file}
-        chown -R #{new_resource.owner} #{build_directory}
-        chgrp -R #{new_resource.group} #{build_directory}
+        chown -R #{new_resource.owner}:#{new_resource.group} #{build_directory}
       CODE
       return code
     end
@@ -364,7 +363,7 @@ module PythonInstall
     def command_for_file(install_directory, filename, new_resource)
       path = File.join(install_directory, filename)
       recurse = recurse_command(path)
-      return "\nchown#{recurse} #{new_resource.owner} #{path}\nchgrp#{recurse} #{new_resource.group} #{path}"
+      return "\nchown#{recurse} #{new_resource.owner}:#{new_resource.group} #{path}"
     end
 
     def iterate_install_directory(install_directory, new_resource)
@@ -391,7 +390,7 @@ module PythonInstall
     # Some install scripts create artifacts in the source directory
     def set_src_permissions(build_directory, new_resource)
       bash 'Set Config Permissions' do
-        code "chown -R #{new_resource.owner} #{build_directory}\nchgrp -R #{new_resource.group} #{build_directory}"
+        code "chown -R #{new_resource.owner}:#{new_resource.group} #{build_directory}"
         action :nothing
         subscribes :run, 'bash[Install]', :immediate
       end
