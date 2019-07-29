@@ -10,6 +10,7 @@ __Maintainer: OIT Systems Engineering__ (<ua-oit-se@alaska.edu>)
 
 This cookbook provides a single resource that downloads, configures, compiles, and installs Python.
 As Python is built from source, build times can be long, especially for Python 3.7.
+If building OpenSSL, SQLite, and Python, the first run builds can take more than a half hour.
 
 ## Requirements
 
@@ -75,9 +76,11 @@ See note below about paths.
 * `openssl_directory` - Defaults to `nil`.
 The local path to the directory where OpenSSL is installed.
 If nil, system OpenSSL will be used and must be installed prior to this resource running.
+For an OpenSSL resource, see the [openssl_install cookbook](https://github.com/UAlaska-IT/openssl_install)
 * `sqlite_directory` - Defaults to `nil`.
 The local path to the directory where SQLite is installed.
 If nil, system SQLite will be used and must be installed prior to this resource running.
+For an SQLite resource, see the [sqlite_install cookbook](https://github.com/UAlaska-IT/sqlite_install)
 * `owner` - Defaults to `root`.
 The owner of all artifacts.
 * `group` - Defaults to `root`.
