@@ -124,8 +124,7 @@ module PythonInstall
       code += " --prefix=#{install_directory}"
       code += " --exec_prefix=#{install_directory}"
       code += ' --with-system-ffi'
-      # Optimizations are broken on ancient CentOS package versions
-      code += ' --enable-optimizations' # if node['platform_family'] == 'debian'
+      code += ' --enable-optimizations'
       return code
     end
 
