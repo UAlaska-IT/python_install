@@ -7,12 +7,6 @@ module PythonInstall
   end
   # This module implements custom logic for this installer
   def Custom
-  end
-  # This module implements hooks into the base install
-  def Hook
-  end
-  # This module implements helpers that are used for resources
-  module Install
     def openssl_inc_directory(new_resource)
       return File.join(new_resource.openssl_directory, 'include')
     end
@@ -110,7 +104,7 @@ module PythonInstall
     def generate_lib_config(install_directory, new_resource)
       code = ''
       code += 'export LDFLAGS="-Wl'
-      code += generate_run_config(install_directory, new_resource)
+      code += Custom.generate_run_config(install_directory, new_resource)
       code += " -L#{openssl_lib_directory(new_resource)}" if new_resource.openssl_directory
       code += " -L#{sqlite_lib_directory(new_resource)}" if new_resource.sqlite_directory
       code += "\"\n"
@@ -136,15 +130,21 @@ module PythonInstall
       code += ' --enable-optimizations'
       return code
     end
+  end
+  # This module implements hooks into the base install
+  def Hook
+  end
+  # This module implements helpers that are used for resources
+  module Install
 
     # Hooks for install
 
     def configuration_command(install_directory, new_resource)
-      code = generate_bin_config(install_directory, new_resource)
-      code += generate_lib_config(install_directory, new_resource)
-      code += generate_inc_config(new_resource)
+      code = Custom.generate_bin_config(install_directory, new_resource)
+      code += Custom.generate_lib_config(install_directory, new_resource)
+      code += Custom.generate_inc_config(new_resource)
       code += ' ./configure'
-      code += generate_configure_options(install_directory)
+      code += Custom.generate_configure_options(install_directory)
       return code
     end
 
@@ -169,7 +169,7 @@ module PythonInstall
     end
 
     def install_creates_file(new_resource)
-      return rel_path_to_python_binary(new_resource)
+      return Custom.rel_path_to_python_binary(new_resource)
     end
 
     def install_command(_new_resource)
@@ -177,8 +177,8 @@ module PythonInstall
     end
 
     def post_build_logic(install_directory, new_resource)
-      make_python_links(install_directory, new_resource)
-      make_pip_links(install_directory, new_resource)
+      Custom.make_python_links(install_directory, new_resource)
+      Custom.make_pip_links(install_directory, new_resource)
     end
 
     # For common install code see base_install cookbook
