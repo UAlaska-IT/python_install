@@ -136,8 +136,11 @@ module PythonInstall
   end
   # This module implements helpers that are used for resources
   module Install
-
     # Hooks for install
+
+    def base_name(_new_resource)
+      return 'Python'
+    end
 
     def configuration_command(install_directory, new_resource)
       code = Custom.generate_bin_config(install_directory, new_resource)
@@ -146,10 +149,6 @@ module PythonInstall
       code += ' ./configure'
       code += Custom.generate_configure_options(install_directory)
       return code
-    end
-
-    def base_name(_new_resource)
-      return 'Python'
     end
 
     def extract_creates_file(_new_resource)
