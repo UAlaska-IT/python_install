@@ -142,19 +142,6 @@ module PythonInstall
       return 'Python'
     end
 
-    def configuration_command(install_directory, new_resource)
-      code = Custom.generate_bin_config(install_directory, new_resource)
-      code += Custom.generate_lib_config(install_directory, new_resource)
-      code += Custom.generate_inc_config(new_resource)
-      code += ' ./configure'
-      code += Custom.generate_configure_options(install_directory)
-      return code
-    end
-
-    def extract_creates_file(_new_resource)
-      return 'README.rst'
-    end
-
     def archive_file_name(new_resource)
       return "#{base_name(new_resource)}-#{new_resource.version}.tgz"
     end
@@ -165,6 +152,19 @@ module PythonInstall
 
     def archive_root_directory(new_resource)
       return "#{base_name(new_resource)}-#{new_resource.version}"
+    end
+
+    def extract_creates_file(_new_resource)
+      return 'README.rst'
+    end
+
+    def configuration_command(install_directory, new_resource)
+      code = Custom.generate_bin_config(install_directory, new_resource)
+      code += Custom.generate_lib_config(install_directory, new_resource)
+      code += Custom.generate_inc_config(new_resource)
+      code += ' ./configure'
+      code += Custom.generate_configure_options(install_directory)
+      return code
     end
 
     def install_creates_file(new_resource)
