@@ -19,5 +19,5 @@ action :create do
 end
 
 action_class do
-  include PythonInstall::Helper
+  include PythonInstall::Install
 end

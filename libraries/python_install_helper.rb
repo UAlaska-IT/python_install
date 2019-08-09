@@ -2,8 +2,17 @@
 
 # This module implements helpers that are used for resources
 module PythonInstall
+  # This module exposes helpers to the client
+  module Public
+  end
+  # This module implements custom logic for this installer
+  def Custom
+  end
+  # This module implements hooks into the base install
+  def Hook
+  end
   # This module implements helpers that are used for resources
-  module Helper
+  module Install
     def openssl_inc_directory(new_resource)
       return File.join(new_resource.openssl_directory, 'include')
     end
