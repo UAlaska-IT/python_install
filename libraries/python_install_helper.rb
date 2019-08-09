@@ -137,6 +137,8 @@ module PythonInstall
       return code
     end
 
+    # Hooks for install
+
     def create_config_code(install_directory, new_resource)
       code = generate_bin_config(install_directory, new_resource)
       code += generate_lib_config(install_directory, new_resource)
@@ -170,10 +172,16 @@ module PythonInstall
       return rel_path_to_python_binary(new_resource)
     end
 
+    def install_command(_new_resource)
+      return 'make altinstall'
+    end
+
     def post_build_logic(install_directory, new_resource)
       make_python_links(install_directory, new_resource)
       make_pip_links(install_directory, new_resource)
     end
+
+    # Common install code
 
     def create_default_directories
       directory '/var/chef' do
@@ -353,9 +361,9 @@ module PythonInstall
       end
     end
 
-    def execute_install(build_directory, bin_file)
+    def execute_install(build_directory, bin_file, new_resource)
       bash 'Install' do
-        code 'make altinstall'
+        code install_command(new_resource)
         cwd build_directory
         # Run as root in case it is installing in directory without write access
         creates bin_file
@@ -417,7 +425,7 @@ module PythonInstall
 
     def make_build(build_directory, install_directory, bin_file, new_resource)
       execute_build(build_directory, bin_file, new_resource)
-      execute_install(build_directory, bin_file)
+      execute_install(build_directory, bin_file, new_resource)
       set_install_permissions(build_directory, install_directory, new_resource)
     end
 
