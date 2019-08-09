@@ -147,7 +147,7 @@ module PythonInstall
     end
 
     def download_base_url(new_resource)
-      return "https://www.python.org/ftp/python/#{new_resource.version}/#{archive_file_name(new_resource)}"
+      return "https://www.python.org/ftp/python/#{new_resource.version}"
     end
 
     def archive_root_directory(new_resource)
