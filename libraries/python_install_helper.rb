@@ -175,7 +175,7 @@ module PythonInstall
       return 'make altinstall'
     end
 
-    def post_build_logic(install_directory, new_resource)
+    def post_install_logic(install_directory, new_resource)
       Custom.make_python_links(install_directory, new_resource)
       Custom.make_pip_links(install_directory, new_resource)
     end
