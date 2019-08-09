@@ -139,7 +139,7 @@ module PythonInstall
 
     # Hooks for install
 
-    def create_config_code(install_directory, new_resource)
+    def configuration_command(install_directory, new_resource)
       code = generate_bin_config(install_directory, new_resource)
       code += generate_lib_config(install_directory, new_resource)
       code += generate_inc_config(new_resource)
@@ -160,7 +160,7 @@ module PythonInstall
       return "#{base_name(new_resource)}-#{new_resource.version}.tgz"
     end
 
-    def download_url(new_resource)
+    def download_base_url(new_resource)
       return "https://www.python.org/ftp/python/#{new_resource.version}/#{archive_file_name(new_resource)}"
     end
 
@@ -168,7 +168,7 @@ module PythonInstall
       return "#{base_name(new_resource)}-#{new_resource.version}"
     end
 
-    def bin_creates_file(new_resource)
+    def install_creates_file(new_resource)
       return rel_path_to_python_binary(new_resource)
     end
 
