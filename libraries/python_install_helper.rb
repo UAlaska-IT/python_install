@@ -14,7 +14,7 @@ module PythonInstall
     end
   end
   # This module implements custom logic for this installer
-  def Custom
+  module Custom
     def openssl_inc_directory(new_resource)
       return File.join(new_resource.openssl_directory, 'include')
     end
@@ -138,9 +138,6 @@ module PythonInstall
       code += ' --enable-optimizations'
       return code
     end
-  end
-  # This module implements hooks into the base install
-  def Hook
   end
   # This module implements helpers that are used for resources
   module Install
