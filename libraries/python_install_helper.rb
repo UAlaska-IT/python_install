@@ -4,6 +4,14 @@
 module PythonInstall
   # This module exposes helpers to the client
   module Public
+    def default_python_version
+      return '3.7.4'
+    end
+
+    def default_python_directory
+      # Must match base_install
+      return "opt/python/#{default_python_version}"
+    end
   end
   # This module implements custom logic for this installer
   def Custom
@@ -140,6 +148,10 @@ module PythonInstall
 
     def base_name(_new_resource)
       return 'Python'
+    end
+
+    def default_version(_new_resource)
+      return default_python_version
     end
 
     def archive_file_name(new_resource)
