@@ -195,3 +195,7 @@ module PythonInstall
     # For common install code see base_install cookbook
   end
 end
+
+Chef::Provider.include(PythonInstall::Public)
+Chef::Recipe.include(PythonInstall::Public)
+Chef::Resource.include(PythonInstall::Public)
