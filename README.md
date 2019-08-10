@@ -61,9 +61,10 @@ One action is provided.
 
 __Attributes__
 
-* `version` - Defaults to `'3.7.4'`.
+* `version` - Defaults to `nil`.
 The version of Python to install.
-Note the 'dotless' format.
+If nil, will default to the latest version when this cookbook was updated.
+The helper `default_python_version` is provided for fetching this value.
 * `download_directory` - Defaults to `nil`.
 The local path to the directory into which to download the source archive.
 See note below about paths.
@@ -117,9 +118,9 @@ python_installation 'No Defaults' do
   build_directory '/usr/local/python-bld'
   install_directory '/usr/local/python'
   openssl_directory '/opt/openssl/1.1.1c'
-  sqlite_directory '/opt/sqlite/3280000'
-  owner 'some-dudette'
-  group 'some-dudettes'
+  sqlite_directory '/opt/sqlite/3290000'
+  owner 'some-dude'
+  group 'some-dudes'
 end
 ```
 
