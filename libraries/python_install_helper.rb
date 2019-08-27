@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'source_install'
+
 # This module implements helpers that are used for resources
 module PythonInstall
   # This module exposes helpers to the client
@@ -9,10 +11,11 @@ module PythonInstall
     end
 
     def default_python_directory
-      # Must match base_install
+      # Must match source_install
       return "opt/python/#{default_python_version}"
     end
   end
+
   # This module implements custom logic for this installer
   module Custom
     def openssl_inc_directory(new_resource)
@@ -139,8 +142,11 @@ module PythonInstall
       return code
     end
   end
+
   # This module implements helpers that are used for resources
   module Install
+    include Source::Install
+
     # Hooks for install
 
     def base_name(_new_resource)
@@ -189,7 +195,7 @@ module PythonInstall
       Custom.make_pip_links(new_resource)
     end
 
-    # For common install code see base_install cookbook
+    # For common install code see source_install cookbook
   end
 end
 
