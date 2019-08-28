@@ -100,7 +100,7 @@ module PythonInstall
       make_pip3_link(new_resource)
     end
 
-    def generate_bin_config(_install_directory, _new_resource)
+    def generate_bin_config(_new_resource)
       return ''
     end
 
@@ -115,7 +115,7 @@ module PythonInstall
     def generate_lib_config(new_resource)
       code = ''
       code += 'export LDFLAGS="-Wl'
-      code += Custom.generate_run_config(new_resource)
+      code += generate_run_config(new_resource)
       code += " -L#{openssl_lib_directory(new_resource)}" if new_resource.openssl_directory
       code += " -L#{sqlite_lib_directory(new_resource)}" if new_resource.sqlite_directory
       code += "\"\n"
@@ -146,6 +146,7 @@ module PythonInstall
   # This module implements helpers that are used for resources
   module Install
     include Source::Install
+    include Custom
 
     # Hooks for install
 
@@ -174,16 +175,16 @@ module PythonInstall
     end
 
     def configuration_command(new_resource)
-      code = Custom.generate_bin_config(new_resource)
-      code += Custom.generate_lib_config(new_resource)
-      code += Custom.generate_inc_config(new_resource)
+      code = generate_bin_config(new_resource)
+      code += generate_lib_config(new_resource)
+      code += generate_inc_config(new_resource)
       code += ' ./configure'
-      code += Custom.generate_configure_options(new_resource)
+      code += generate_configure_options(new_resource)
       return code
     end
 
     def install_creates_file(new_resource)
-      return Custom.rel_path_to_python_binary(new_resource)
+      return rel_path_to_python_binary(new_resource)
     end
 
     def install_command(_new_resource)
@@ -191,8 +192,8 @@ module PythonInstall
     end
 
     def post_install_logic(new_resource)
-      Custom.make_python_links(new_resource)
-      Custom.make_pip_links(new_resource)
+      make_python_links(new_resource)
+      make_pip_links(new_resource)
     end
 
     # For common install code see source_install cookbook
