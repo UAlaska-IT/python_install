@@ -132,13 +132,21 @@ module PythonInstall
       return code
     end
 
+    def generate_shared_optimized_options(new_resource)
+      code = ''
+      code += ' --enable-shared' if new_resource.build_shared
+      version = new_resource.version.to_f
+      build_bug = version >= 3.6 && version < 3.7
+      code += ' --enable-optimizations' unless new_resource.build_shared && build_bug
+      return code
+    end
+
     def generate_configure_options(new_resource)
       code = ''
-      code += ' --enable-shared'
       code += " --prefix=#{new_resource.install_directory}"
       code += " --exec_prefix=#{new_resource.install_directory}"
       code += ' --with-system-ffi'
-      code += ' --enable-optimizations'
+      code += generate_shared_optimized_options(new_resource)
       return code
     end
   end

@@ -36,6 +36,7 @@ python_installation 'No Defaults' do
   install_directory '/usr/local/python'
   openssl_directory default_openssl_directory
   sqlite_directory default_sqlite_directory
+  build_shared true
   owner 'bud'
   group 'bud'
 end

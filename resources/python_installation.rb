@@ -11,6 +11,7 @@ property :build_directory, [String, nil], default: nil
 property :install_directory, [String, nil], default: nil
 property :openssl_directory, [String, nil], default: nil
 property :sqlite_directory, [String, nil], default: nil
+property :build_shared, [true, false], default: false
 property :owner, String, default: 'root'
 property :group, String, default: 'root'
 

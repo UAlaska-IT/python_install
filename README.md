@@ -82,6 +82,10 @@ For an OpenSSL resource, see the [openssl_install cookbook](https://github.com/U
 The local path to the directory where SQLite is installed.
 If nil, system SQLite will be used and must be installed prior to this resource running.
 For an SQLite resource, see the [sqlite_install cookbook](https://github.com/UAlaska-IT/sqlite_install)
+* `build_shared` - Defaults to `false`.
+If true, shared libraries are built.
+Building shared libraries increases build time noticeably.
+For Python 3.6 (not 3.5, not 3.7) this will also disable optimizations to workaround an [issue in the Python build system](https://bugs.python.org/issue29712).
 * `owner` - Defaults to `root`.
 The owner of all artifacts.
 * `group` - Defaults to `root`.
