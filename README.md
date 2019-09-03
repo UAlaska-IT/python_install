@@ -73,6 +73,8 @@ The local path to the directory into which to decompress and build the source co
 See note below about paths.
 * `install_directory` - Defaults to `nil`.
 The local path to the directory into which to install the binary artifacts.
+If nil, will default to a platform-standard location.
+The helper `default_python_directory` is provided for fetching this location.
 See note below about paths.
 * `openssl_directory` - Defaults to `nil`.
 The local path to the directory where OpenSSL is installed.
