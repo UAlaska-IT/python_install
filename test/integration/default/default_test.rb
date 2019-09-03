@@ -511,11 +511,11 @@ end
 describe bash "/opt/#{BASE_NAME}/#{CURR_VER}/bin/#{BASE_NAME}3 -c 'import sqlite3; print(sqlite3.sqlite_version)'" do
   its(:exit_status) { should eq 0 }
   its(:stderr) { should eq '' }
-  its(:stdout) { should_not match(/3\.28\.0/) } # Different on every distro
+  its(:stdout) { should_not match(/3\.29\.0/) } # Different on every distro
 end
 
 describe bash "/usr/local/#{BASE_NAME}/bin/#{BASE_NAME}3 -c 'import sqlite3; print(sqlite3.sqlite_version)'" do
   its(:exit_status) { should eq 0 }
   its(:stderr) { should eq '' }
-  its(:stdout) { should match(/3\.28\.0/) }
+  its(:stdout) { should match(/3\.29\.0/) }
 end
