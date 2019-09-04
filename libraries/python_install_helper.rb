@@ -12,7 +12,7 @@ module PythonInstall
 
     def default_python_directory
       # Must match source_install
-      return "opt/python/#{default_python_version}"
+      return "/opt/python/#{default_python_version}"
     end
   end
 
