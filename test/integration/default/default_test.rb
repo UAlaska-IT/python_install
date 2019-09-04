@@ -187,7 +187,7 @@ describe file '/opt/openssl/1.1.1c' do
   it { should be_grouped_into 'root' }
 end
 
-describe file '/opt/sqlite/3280000' do
+describe file '/opt/sqlite/3290000' do
   it { should exist }
   it { should be_directory }
   it { should be_mode 0o755 }
@@ -338,6 +338,8 @@ describe file "/var/chef/cache/#{BASE_NAME}-#{CURR_VER}-config" do
   its(:content) { should match(%r{-rpath,/opt/python/#{CURR_VER}}) }
   its(:content) { should match(%r{--prefix=/opt/python/#{CURR_VER}}) }
   its(:content) { should match(%r{--exec_prefix=/opt/python/#{CURR_VER}}) }
+  its(:content) { should_not match(/--enable-shared/) }
+  its(:content) { should match(/--enable-optimizations/) }
 end
 
 describe file "/var/chef/cache/#{BASE_NAME}-#{PREV_VER}-config" do
@@ -348,11 +350,13 @@ describe file "/var/chef/cache/#{BASE_NAME}-#{PREV_VER}-config" do
   it { should be_grouped_into 'root' }
   its(:content) { should match(%r{-I/opt/openssl/1\.1\.1c/include}) }
   its(:content) { should match(%r{-rpath,/opt/openssl/1\.1\.1c/lib}) }
-  its(:content) { should match(%r{-I/opt/sqlite/3280000/include}) }
-  its(:content) { should match(%r{-rpath,/opt/sqlite/3280000/lib}) }
+  its(:content) { should match(%r{-I/opt/sqlite/3290000/include}) }
+  its(:content) { should match(%r{-rpath,/opt/sqlite/3290000/lib}) }
   its(:content) { should match(%r{-rpath,/usr/local/#{BASE_NAME}/lib}) }
   its(:content) { should match(%r{--prefix=/usr/local/#{BASE_NAME}}) }
   its(:content) { should match(%r{--exec_prefix=/usr/local/#{BASE_NAME}}) }
+  its(:content) { should match(/--enable-shared/) }
+  its(:content) { should_not match(/--enable-optimizations/) }
 end
 
 describe file "/opt/#{BASE_NAME}/#{CURR_VER}/include/#{BASE_NAME}#{CURR_REV}m/pyconfig.h" do
@@ -372,11 +376,7 @@ describe file "/usr/local/#{BASE_NAME}/include/#{BASE_NAME}#{PREV_REV}m/pyconfig
 end
 
 describe file "/opt/#{BASE_NAME}/#{CURR_VER}/lib/lib#{BASE_NAME}3.so" do
-  it { should exist }
-  it { should be_file }
-  it { should be_mode 0o555 }
-  it { should be_owned_by 'root' }
-  it { should be_grouped_into 'root' }
+  it { should_not exist }
 end
 
 describe file "/usr/local/#{BASE_NAME}/lib/lib#{BASE_NAME}3.so" do
@@ -511,11 +511,11 @@ end
 describe bash "/opt/#{BASE_NAME}/#{CURR_VER}/bin/#{BASE_NAME}3 -c 'import sqlite3; print(sqlite3.sqlite_version)'" do
   its(:exit_status) { should eq 0 }
   its(:stderr) { should eq '' }
-  its(:stdout) { should_not match(/3\.28\.0/) } # Different on every distro
+  its(:stdout) { should_not match(/3\.29\.0/) } # Different on every distro
 end
 
 describe bash "/usr/local/#{BASE_NAME}/bin/#{BASE_NAME}3 -c 'import sqlite3; print(sqlite3.sqlite_version)'" do
   its(:exit_status) { should eq 0 }
   its(:stderr) { should eq '' }
-  its(:stdout) { should match(/3\.28\.0/) }
+  its(:stdout) { should match(/3\.29\.0/) }
 end

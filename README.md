@@ -61,9 +61,10 @@ One action is provided.
 
 __Attributes__
 
-* `version` - Defaults to `'3.7.4'`.
+* `version` - Defaults to `nil`.
 The version of Python to install.
-Note the 'dotless' format.
+If nil, will default to the latest version when this cookbook was updated.
+The helper `default_python_version` is provided for fetching this value.
 * `download_directory` - Defaults to `nil`.
 The local path to the directory into which to download the source archive.
 See note below about paths.
@@ -72,6 +73,8 @@ The local path to the directory into which to decompress and build the source co
 See note below about paths.
 * `install_directory` - Defaults to `nil`.
 The local path to the directory into which to install the binary artifacts.
+If nil, will default to a platform-standard location.
+The helper `default_python_directory` is provided for fetching this location.
 See note below about paths.
 * `openssl_directory` - Defaults to `nil`.
 The local path to the directory where OpenSSL is installed.
@@ -81,6 +84,10 @@ For an OpenSSL resource, see the [openssl_install cookbook](https://github.com/U
 The local path to the directory where SQLite is installed.
 If nil, system SQLite will be used and must be installed prior to this resource running.
 For an SQLite resource, see the [sqlite_install cookbook](https://github.com/UAlaska-IT/sqlite_install)
+* `build_shared` - Defaults to `false`.
+If true, shared libraries are built.
+Building shared libraries increases build time noticeably.
+For Python 3.6 (not 3.5, not 3.7) this will also disable optimizations to workaround an [issue in the Python build system](https://bugs.python.org/issue29712).
 * `owner` - Defaults to `root`.
 The owner of all artifacts.
 * `group` - Defaults to `root`.
@@ -117,9 +124,9 @@ python_installation 'No Defaults' do
   build_directory '/usr/local/python-bld'
   install_directory '/usr/local/python'
   openssl_directory '/opt/openssl/1.1.1c'
-  sqlite_directory '/opt/sqlite/3280000'
-  owner 'some-dudette'
-  group 'some-dudettes'
+  sqlite_directory '/opt/sqlite/3290000'
+  owner 'some-dude'
+  group 'some-dudes'
 end
 ```
 

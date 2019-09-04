@@ -8,7 +8,7 @@ openssl_installation 'All defaults' unless node['platform_family'] == 'debian'
 
 python_installation 'All Defaults' do
   # RHEL has ancient libs that are not supported by newer Pythons
-  openssl_directory '/opt/openssl/1.1.1c' unless node['platform_family'] == 'debian'
+  openssl_directory default_openssl_directory unless node['platform_family'] == 'debian'
 end
 
 directory '/usr/local/python-dl'
@@ -34,8 +34,9 @@ python_installation 'No Defaults' do
   download_directory '/usr/local/python-dl'
   build_directory '/usr/local/python-bld'
   install_directory '/usr/local/python'
-  openssl_directory '/opt/openssl/1.1.1c'
-  sqlite_directory '/opt/sqlite/3280000'
+  openssl_directory default_openssl_directory
+  sqlite_directory default_sqlite_directory
+  build_shared true
   owner 'bud'
   group 'bud'
 end

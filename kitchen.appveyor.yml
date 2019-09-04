@@ -52,5 +52,5 @@ suites:
         - test/integration/default
     attributes:
     includes:
-      # - ubuntu-18.04 Appveyor builds are timing out
+      - ubuntu-18.04
       - centos-7
