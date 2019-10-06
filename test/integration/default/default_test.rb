@@ -181,7 +181,7 @@ describe file '/opt/openssl/1.1.1c' do
   it { should be_grouped_into 'root' }
 end
 
-describe file '/opt/sqlite/3290000' do
+describe file '/opt/sqlite/3300000' do
   it { should exist }
   it { should be_directory }
   it { should be_mode 0o755 }
@@ -396,8 +396,8 @@ end
     it { should be_grouped_into 'root' }
     its(:content) { should match(%r{-I/opt/openssl/1\.1\.1c/include}) }
     its(:content) { should match(%r{-rpath,/opt/openssl/1\.1\.1c/lib}) }
-    its(:content) { should match(%r{-I/opt/sqlite/3290000/include}) }
-    its(:content) { should match(%r{-rpath,/opt/sqlite/3290000/lib}) }
+    its(:content) { should match(%r{-I/opt/sqlite/3300000/include}) }
+    its(:content) { should match(%r{-rpath,/opt/sqlite/3300000/lib}) }
     its(:content) { should match(/--enable-shared/) }
     its(:content) { should_not match(/--enable-optimizations/) }
   end
