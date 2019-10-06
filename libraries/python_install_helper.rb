@@ -49,9 +49,13 @@ module PythonInstall
       return File.join(new_resource.install_directory, rel_path_to_python_binary(new_resource))
     end
 
-    def path_to_pip_binary(new_resource)
+    def rel_path_to_pip_binary(new_resource)
       revision = python_revision(new_resource)
-      return File.join(new_resource.install_directory, "bin/pip#{revision}")
+      return "bin/pip#{revision}"
+    end
+
+    def path_to_pip_binary(new_resource)
+      return File.join(new_resource.install_directory, rel_path_to_pip_binary(new_resource))
     end
 
     def make_python_link(new_resource)
@@ -151,7 +155,7 @@ module PythonInstall
     end
   end
 
-  # This module implements helpers that are used for resources
+  # This module implements hooks from source_install
   module Install
     include Source::Install
     include Custom
@@ -192,7 +196,12 @@ module PythonInstall
     end
 
     def install_creates_file(new_resource)
-      return rel_path_to_python_binary(new_resource)
+      # Pip is created after python, so this is more robust
+      return rel_path_to_pip_binary(new_resource)
+    end
+
+    # For optional hooks and common install code see source_install cookbook
+
     end
 
     def install_command(_new_resource)
@@ -203,8 +212,6 @@ module PythonInstall
       make_python_links(new_resource)
       make_pip_links(new_resource)
     end
-
-    # For common install code see source_install cookbook
   end
 end
 
