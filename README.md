@@ -11,6 +11,7 @@ __Maintainer: OIT Systems Engineering__ (<ua-oit-se@alaska.edu>)
 This cookbook provides a single resource that downloads, configures, compiles, and installs Python.
 As Python is built from source, build times can be long, especially for Python 3.7.
 If building OpenSSL, SQLite, and Python, the first run builds can take more than a half hour.
+On burstable instance types, CPU credits tend to deplete on small instances (smaller than an EC2 t3.medium).
 
 ## Requirements
 
@@ -124,7 +125,7 @@ python_installation 'No Defaults' do
   build_directory '/usr/local/python-bld'
   install_directory '/usr/local/python'
   openssl_directory '/opt/openssl/1.1.1c'
-  sqlite_directory '/opt/sqlite/3290000'
+  sqlite_directory '/opt/sqlite/3300000'
   owner 'some-dude'
   group 'some-dudes'
 end
