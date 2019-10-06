@@ -25,4 +25,6 @@ supports 'amazon'
 
 chef_version '>= 14.0' if respond_to?(:chef_version)
 
+depends 'openssl_install'
 depends 'source_install'
+depends 'sqlite_install'

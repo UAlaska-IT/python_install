@@ -11,6 +11,10 @@ apt_update 'Pre-Install Update' do
   action :update
 end
 
+include_recipe 'openssl_install::default'
+
+include_recipe 'sqlite_install::default'
+
 package 'gcc'
 package 'g++' if node['platform_family'] == 'debian'
 package 'gcc-c++' unless node['platform_family'] == 'debian'

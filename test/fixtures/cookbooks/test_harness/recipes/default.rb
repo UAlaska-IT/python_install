@@ -2,8 +2,6 @@
 
 include_recipe 'python_install::default'
 
-include_recipe 'openssl_install::default' unless node['platform_family'] == 'debian'
-
 openssl_installation 'All defaults' unless node['platform_family'] == 'debian'
 
 python_installation 'All Defaults' do
@@ -25,11 +23,7 @@ user 'bud' do
   shell '/bin/bash'
 end
 
-include_recipe 'openssl_install::default' if node['platform_family'] == 'debian'
-
 openssl_installation 'All defaults' if node['platform_family'] == 'debian'
-
-include_recipe 'sqlite_install::default'
 
 sqlite_installation 'All defaults'
 
