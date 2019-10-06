@@ -2,7 +2,9 @@
 
 include_recipe 'python_install::default'
 
-openssl_installation 'All defaults' unless node['platform_family'] == 'debian'
+openssl_installation 'All defaults'
+
+sqlite_installation 'All defaults'
 
 python_installation 'All Defaults' do
   # RHEL has ancient libs that are not supported by newer Pythons
@@ -22,10 +24,6 @@ directory '/usr/local/python/prev'
 user 'bud' do
   shell '/bin/bash'
 end
-
-openssl_installation 'All defaults' if node['platform_family'] == 'debian'
-
-sqlite_installation 'All defaults'
 
 python_installation 'Shared' do
   version '3.7.3'
