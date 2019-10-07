@@ -399,7 +399,6 @@ end
     its(:content) { should match(%r{-I/opt/sqlite/3300000/include}) }
     its(:content) { should match(%r{-rpath,/opt/sqlite/3300000/lib}) }
     its(:content) { should match(/--enable-shared/) }
-    its(:content) { should_not match(/--enable-optimizations/) }
   end
 end
 
@@ -407,12 +406,14 @@ describe file "/var/chef/cache/#{BASE_NAME}-#{SHARE_VER}-config" do
   its(:content) { should match(%r{-rpath,/usr/local/#{BASE_NAME}/curr/lib}) }
   its(:content) { should match(%r{--prefix=/usr/local/#{BASE_NAME}/curr}) }
   its(:content) { should match(%r{--exec_prefix=/usr/local/#{BASE_NAME}/curr}) }
+  its(:content) { should match(/--enable-optimizations/) }
 end
 
 describe file "/var/chef/cache/#{BASE_NAME}-#{PREV_VER}-config" do
   its(:content) { should match(%r{-rpath,/usr/local/#{BASE_NAME}/prev/lib}) }
   its(:content) { should match(%r{--prefix=/usr/local/#{BASE_NAME}/prev}) }
   its(:content) { should match(%r{--exec_prefix=/usr/local/#{BASE_NAME}/prev}) }
+  its(:content) { should_not match(/--enable-optimizations/) }
 end
 
 describe file "/opt/#{BASE_NAME}/#{CURR_VER}/include/#{BASE_NAME}#{CURR_REV}m/pyconfig.h" do
@@ -612,7 +613,7 @@ end
 describe bash "/usr/local/#{BASE_NAME}/curr/bin/#{BASE_NAME}3 --version" do
   its(:exit_status) { should eq 0 }
   its(:stderr) { should eq '' }
-  its(:stdout) { should match(/3\.7\.4/) }
+  its(:stdout) { should match(/3\.7\.3/) }
 end
 
 describe bash "/usr/local/#{BASE_NAME}/prev/bin/#{BASE_NAME}3 --version" do
