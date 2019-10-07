@@ -140,7 +140,7 @@ module PythonInstall
       code = ''
       code += ' --with-system-expat'
       code += ' --with-system-ffi'
-      code += ' --with-system-libmpdec'
+      code += ' --with-system-libmpdec' if node['platform_family'] == 'debian'
       return code
     end
 
