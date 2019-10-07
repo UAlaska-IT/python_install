@@ -136,6 +136,14 @@ module PythonInstall
       return code
     end
 
+    def generate_system_options
+      code = ''
+      code += ' --with-system-expat'
+      code += ' --with-system-ffi'
+      code += ' --with-system-libmpdec'
+      return code
+    end
+
     def generate_shared_optimized_options(new_resource)
       code = ''
       code += ' --enable-shared' if new_resource.build_shared
@@ -149,7 +157,7 @@ module PythonInstall
       code = ''
       code += " --prefix=#{new_resource.install_directory}"
       code += " --exec_prefix=#{new_resource.install_directory}"
-      code += ' --with-system-ffi'
+      code += generate_system_options
       code += generate_shared_optimized_options(new_resource)
       return code
     end
