@@ -211,10 +211,10 @@ module PythonInstall
 
     # For optional hooks and common install code see source_install cookbook
 
-    end
-
     def install_command(_new_resource)
-      return 'make altinstall'
+      # Python with shared libs is failing to install binaries after running 'make && make altinstall'
+      # Running 'make altinstall' twice solves the problem?!
+      return 'make altinstall; make altinstall'
     end
 
     def post_install_logic(new_resource)
