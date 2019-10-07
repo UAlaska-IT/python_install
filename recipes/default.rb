@@ -33,6 +33,9 @@ package "sqlite-#{dev}" unless node['platform_family'] == 'debian'
 package "libbz2-#{dev}" if node['platform_family'] == 'debian'
 package "bzip2-#{dev}" unless node['platform_family'] == 'debian'
 
+package "libexpat1-#{dev}" if node['platform_family'] == 'debian'
+package "expat-#{dev}" unless node['platform_family'] == 'debian'
+
 package "libffi-#{dev}"
 
 package "libgdbm-#{dev}" if node['platform_family'] == 'debian'

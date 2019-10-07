@@ -87,6 +87,14 @@ describe package("bzip2-#{dev}") do
   it { should be_installed } unless node['platform_family'] == 'debian'
 end
 
+describe package("libexpat1-#{dev}") do
+  it { should be_installed } if node['platform_family'] == 'debian'
+end
+
+describe package("expat-#{dev}") do
+  it { should be_installed } unless node['platform_family'] == 'debian'
+end
+
 describe package("libffi-#{dev}") do
   it { should be_installed }
 end
