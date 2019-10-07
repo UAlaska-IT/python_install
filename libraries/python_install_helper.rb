@@ -140,6 +140,7 @@ module PythonInstall
       code = ''
       code += ' --with-system-expat'
       code += ' --with-system-ffi'
+      # We could add EPEL and install mpdecimal-devel
       code += ' --with-system-libmpdec' if node['platform_family'] == 'debian'
       return code
     end
