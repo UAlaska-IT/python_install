@@ -173,7 +173,7 @@ describe user 'bud' do
   its('shell') { should eq '/bin/bash' }
 end
 
-describe file '/opt/openssl/1.1.1c' do
+describe file '/opt/openssl/1.1.1d' do
   it { should exist }
   it { should be_directory }
   it { should be_mode 0o755 }
@@ -373,10 +373,10 @@ describe file "/var/chef/cache/#{BASE_NAME}-#{CURR_VER}-config" do
   it { should be_mode 0o644 }
   it { should be_owned_by 'root' }
   it { should be_grouped_into 'root' }
-  its(:content) { should_not match(%r{-I/opt/openssl/1\.1\.1c/include}) } if node['platform_family'] == 'debian'
-  its(:content) { should_not match(%r{-rpath,/opt/openssl/1\.1\.1c/lib}) } if node['platform_family'] == 'debian'
-  its(:content) { should match(%r{-I/opt/openssl/1\.1\.1c/include}) } unless node['platform_family'] == 'debian'
-  its(:content) { should match(%r{-rpath,/opt/openssl/1\.1\.1c/lib}) } unless node['platform_family'] == 'debian'
+  its(:content) { should_not match(%r{-I/opt/openssl/1\.1\.1d/include}) } if node['platform_family'] == 'debian'
+  its(:content) { should_not match(%r{-rpath,/opt/openssl/1\.1\.1d/lib}) } if node['platform_family'] == 'debian'
+  its(:content) { should match(%r{-I/opt/openssl/1\.1\.1d/include}) } unless node['platform_family'] == 'debian'
+  its(:content) { should match(%r{-rpath,/opt/openssl/1\.1\.1d/lib}) } unless node['platform_family'] == 'debian'
   its(:content) { should match(%r{-rpath,/opt/python/#{CURR_VER}}) }
   its(:content) { should match(%r{--prefix=/opt/python/#{CURR_VER}}) }
   its(:content) { should match(%r{--exec_prefix=/opt/python/#{CURR_VER}}) }
@@ -394,8 +394,8 @@ end
     it { should be_mode 0o644 }
     it { should be_owned_by 'root' }
     it { should be_grouped_into 'root' }
-    its(:content) { should match(%r{-I/opt/openssl/1\.1\.1c/include}) }
-    its(:content) { should match(%r{-rpath,/opt/openssl/1\.1\.1c/lib}) }
+    its(:content) { should match(%r{-I/opt/openssl/1\.1\.1d/include}) }
+    its(:content) { should match(%r{-rpath,/opt/openssl/1\.1\.1d/lib}) }
     its(:content) { should match(%r{-I/opt/sqlite/3300000/include}) }
     its(:content) { should match(%r{-rpath,/opt/sqlite/3300000/lib}) }
     its(:content) { should match(/--enable-shared/) }
@@ -624,36 +624,36 @@ end
 describe bash "/opt/#{BASE_NAME}/#{CURR_VER}/bin/#{BASE_NAME}3 -c 'import ssl; print(ssl.OPENSSL_VERSION)'" do
   its(:exit_status) { should eq 0 }
   its(:stderr) { should eq '' }
-  its(:stdout) { should_not match(/1\.1\.1c/) } if node['platform_family'] == 'debian'
-  its(:stdout) { should match(/1\.1\.1c/) } unless node['platform_family'] == 'debian'
+  its(:stdout) { should_not match(/1\.1\.1d/) } if node['platform_family'] == 'debian'
+  its(:stdout) { should match(/1\.1\.1d/) } unless node['platform_family'] == 'debian'
 end
 
 describe bash "/usr/local/#{BASE_NAME}/curr/bin/#{BASE_NAME}3 -c 'import ssl; print(ssl.OPENSSL_VERSION)'" do
   its(:exit_status) { should eq 0 }
   its(:stderr) { should eq '' }
-  its(:stdout) { should match(/1\.1\.1c/) }
+  its(:stdout) { should match(/1\.1\.1d/) }
 end
 
 describe bash "/usr/local/#{BASE_NAME}/prev/bin/#{BASE_NAME}3 -c 'import ssl; print(ssl.OPENSSL_VERSION)'" do
   its(:exit_status) { should eq 0 }
   its(:stderr) { should eq '' }
-  its(:stdout) { should match(/1\.1\.1c/) }
+  its(:stdout) { should match(/1\.1\.1d/) }
 end
 
 describe bash "/opt/#{BASE_NAME}/#{CURR_VER}/bin/#{BASE_NAME}3 -c 'import sqlite3; print(sqlite3.sqlite_version)'" do
   its(:exit_status) { should eq 0 }
   its(:stderr) { should eq '' }
-  its(:stdout) { should_not match(/3\.29\.0/) } # Different on every distro
+  its(:stdout) { should_not match(/3\.30\.0/) } # Different on every distro
 end
 
 describe bash "/usr/local/#{BASE_NAME}/curr/bin/#{BASE_NAME}3 -c 'import sqlite3; print(sqlite3.sqlite_version)'" do
   its(:exit_status) { should eq 0 }
   its(:stderr) { should eq '' }
-  its(:stdout) { should match(/3\.29\.0/) }
+  its(:stdout) { should match(/3\.30\.0/) }
 end
 
 describe bash "/usr/local/#{BASE_NAME}/prev/bin/#{BASE_NAME}3 -c 'import sqlite3; print(sqlite3.sqlite_version)'" do
   its(:exit_status) { should eq 0 }
   its(:stderr) { should eq '' }
-  its(:stdout) { should match(/3\.29\.0/) }
+  its(:stdout) { should match(/3\.30\.0/) }
 end
