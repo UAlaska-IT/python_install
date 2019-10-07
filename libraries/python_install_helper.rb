@@ -211,6 +211,10 @@ module PythonInstall
 
     # For optional hooks and common install code see source_install cookbook
 
+    def config_creates_file(_new_resource)
+      return 'Makefile'
+    end
+
     def install_command(_new_resource)
       # Python with shared libs is failing to install binaries after running 'make && make altinstall'
       # Running 'make altinstall' twice solves the problem?!
