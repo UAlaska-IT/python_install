@@ -158,6 +158,7 @@ module PythonInstall
       code += " --prefix=#{new_resource.install_directory}"
       code += " --exec_prefix=#{new_resource.install_directory}"
       code += generate_system_options
+      code += ' --with-ensurepip=install'
       code += generate_shared_optimized_options(new_resource)
       return code
     end
