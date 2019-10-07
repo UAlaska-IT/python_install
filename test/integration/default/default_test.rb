@@ -127,6 +127,10 @@ describe package("xz-#{dev}") do
   it { should be_installed } unless node['platform_family'] == 'debian'
 end
 
+describe package("libmpdec-#{dev}") do
+  it { should be_installed } if node['platform_family'] == 'debian'
+end
+
 describe package("libncurses5-#{dev}") do
   it { should be_installed } if node['platform_family'] == 'debian'
 end

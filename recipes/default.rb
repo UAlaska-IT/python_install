@@ -48,6 +48,8 @@ package "readline-#{dev}" unless node['platform_family'] == 'debian'
 package "liblzma-#{dev}" if node['platform_family'] == 'debian'
 package "xz-#{dev}" unless node['platform_family'] == 'debian'
 
+package "libmpdec-#{dev}" if node['platform_family'] == 'debian'
+
 package "libncurses5-#{dev}" if node['platform_family'] == 'debian'
 package "ncurses-#{dev}" unless node['platform_family'] == 'debian'
 
