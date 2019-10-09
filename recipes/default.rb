@@ -11,6 +11,10 @@ apt_update 'Pre-Install Update' do
   action :update
 end
 
+include_recipe 'openssl_install::default'
+
+include_recipe 'sqlite_install::default'
+
 package 'gcc'
 package 'g++' if node['platform_family'] == 'debian'
 package 'gcc-c++' unless node['platform_family'] == 'debian'
@@ -29,6 +33,9 @@ package "sqlite-#{dev}" unless node['platform_family'] == 'debian'
 package "libbz2-#{dev}" if node['platform_family'] == 'debian'
 package "bzip2-#{dev}" unless node['platform_family'] == 'debian'
 
+package "libexpat1-#{dev}" if node['platform_family'] == 'debian'
+package "expat-#{dev}" unless node['platform_family'] == 'debian'
+
 package "libffi-#{dev}"
 
 package "libgdbm-#{dev}" if node['platform_family'] == 'debian'
@@ -40,6 +47,8 @@ package "readline-#{dev}" unless node['platform_family'] == 'debian'
 
 package "liblzma-#{dev}" if node['platform_family'] == 'debian'
 package "xz-#{dev}" unless node['platform_family'] == 'debian'
+
+package "libmpdec-#{dev}" if node['platform_family'] == 'debian'
 
 package "libncurses5-#{dev}" if node['platform_family'] == 'debian'
 package "ncurses-#{dev}" unless node['platform_family'] == 'debian'

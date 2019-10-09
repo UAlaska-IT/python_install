@@ -11,7 +11,7 @@ git_url = 'https://github.com/ualaska-it/python_install'
 source_url git_url if respond_to?(:source_url)
 issues_url "#{git_url}/issues" if respond_to?(:issues_url)
 
-version '1.1.0'
+version '1.2.0'
 
 supports 'ubuntu', '>= 16.0'
 supports 'debian', '>= 9.0'
@@ -25,4 +25,6 @@ supports 'amazon'
 
 chef_version '>= 14.0' if respond_to?(:chef_version)
 
+depends 'openssl_install'
 depends 'source_install'
+depends 'sqlite_install'

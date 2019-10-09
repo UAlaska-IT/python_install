@@ -25,6 +25,7 @@ dev =
 
 BASE_NAME = 'python'
 CURR_VER = '3.7.4'
+SHARE_VER = '3.7.3'
 PREV_VER = '3.6.9'
 
 def revision(version)
@@ -33,6 +34,7 @@ def revision(version)
 end
 
 CURR_REV = revision(CURR_VER)
+SHARE_REV = revision(SHARE_VER)
 PREV_REV = revision(PREV_VER)
 
 def archive_file(version)
@@ -85,6 +87,14 @@ describe package("bzip2-#{dev}") do
   it { should be_installed } unless node['platform_family'] == 'debian'
 end
 
+describe package("libexpat1-#{dev}") do
+  it { should be_installed } if node['platform_family'] == 'debian'
+end
+
+describe package("expat-#{dev}") do
+  it { should be_installed } unless node['platform_family'] == 'debian'
+end
+
 describe package("libffi-#{dev}") do
   it { should be_installed }
 end
@@ -117,6 +127,10 @@ describe package("xz-#{dev}") do
   it { should be_installed } unless node['platform_family'] == 'debian'
 end
 
+describe package("libmpdec-#{dev}") do
+  it { should be_installed } if node['platform_family'] == 'debian'
+end
+
 describe package("libncurses5-#{dev}") do
   it { should be_installed } if node['platform_family'] == 'debian'
 end
@@ -147,28 +161,20 @@ end
 
 # Created or assumed by test harness
 
-describe file "/usr/local/#{BASE_NAME}-dl" do
-  it { should exist }
-  it { should be_directory }
-  it { should be_mode LOCAL_MODE }
-  it { should be_owned_by 'root' }
-  it { should be_grouped_into LOCAL_GROUP }
-end
-
-describe file "/usr/local/#{BASE_NAME}-bld" do
-  it { should exist }
-  it { should be_directory }
-  it { should be_mode LOCAL_MODE }
-  it { should be_owned_by 'root' }
-  it { should be_grouped_into LOCAL_GROUP }
-end
-
-describe file "/usr/local/#{BASE_NAME}" do
-  it { should exist }
-  it { should be_directory }
-  it { should be_mode LOCAL_MODE }
-  it { should be_owned_by 'root' }
-  it { should be_grouped_into LOCAL_GROUP }
+[
+  "/usr/local/#{BASE_NAME}-dl",
+  "/usr/local/#{BASE_NAME}-bld",
+  "/usr/local/#{BASE_NAME}",
+  "/usr/local/#{BASE_NAME}/curr",
+  "/usr/local/#{BASE_NAME}/prev"
+].each do |conf|
+  describe file conf do
+    it { should exist }
+    it { should be_directory }
+    it { should be_mode LOCAL_MODE }
+    it { should be_owned_by 'root' }
+    it { should be_grouped_into LOCAL_GROUP }
+  end
 end
 
 describe user 'bud' do
@@ -179,7 +185,7 @@ describe user 'bud' do
   its('shell') { should eq '/bin/bash' }
 end
 
-describe file '/opt/openssl/1.1.1c' do
+describe file '/opt/openssl/1.1.1d' do
   it { should exist }
   it { should be_directory }
   it { should be_mode 0o755 }
@@ -187,7 +193,7 @@ describe file '/opt/openssl/1.1.1c' do
   it { should be_grouped_into 'root' }
 end
 
-describe file '/opt/sqlite/3290000' do
+describe file '/opt/sqlite/3300000' do
   it { should exist }
   it { should be_directory }
   it { should be_mode 0o755 }
@@ -221,6 +227,14 @@ describe file "/var/chef/cache/#{archive_file(CURR_VER)}" do
   it { should be_grouped_into 'root' }
 end
 
+describe file "/usr/local/#{BASE_NAME}-dl/#{archive_file(SHARE_VER)}" do
+  it { should exist }
+  it { should be_file }
+  it { should be_mode 0o644 }
+  it { should be_owned_by 'root' }
+  it { should be_grouped_into 'root' }
+end
+
 describe file "/usr/local/#{BASE_NAME}-dl/#{archive_file(PREV_VER)}" do
   it { should exist }
   it { should be_file }
@@ -230,6 +244,14 @@ describe file "/usr/local/#{BASE_NAME}-dl/#{archive_file(PREV_VER)}" do
 end
 
 describe file "/var/chef/cache/#{source_dir(CURR_VER)}" do
+  it { should exist }
+  it { should be_directory }
+  it { should be_mode 0o755 }
+  it { should be_owned_by 'root' }
+  it { should be_grouped_into 'root' }
+end
+
+describe file "/usr/local/#{BASE_NAME}-bld/#{source_dir(SHARE_VER)}" do
   it { should exist }
   it { should be_directory }
   it { should be_mode 0o755 }
@@ -253,6 +275,14 @@ describe file "/var/chef/cache/#{BASE_NAME}-#{CURR_VER}-dl-checksum" do
   it { should be_grouped_into 'root' }
 end
 
+describe file "/var/chef/cache/#{BASE_NAME}-#{SHARE_VER}-dl-checksum" do
+  it { should exist }
+  it { should be_file }
+  it { should be_mode 0o644 }
+  it { should be_owned_by 'root' }
+  it { should be_grouped_into 'root' }
+end
+
 describe file "/var/chef/cache/#{BASE_NAME}-#{PREV_VER}-dl-checksum" do
   it { should exist }
   it { should be_file }
@@ -269,6 +299,14 @@ describe file "/var/chef/cache/#{BASE_NAME}-#{CURR_VER}-src-checksum" do
   it { should be_grouped_into 'root' }
 end
 
+describe file "/var/chef/cache/#{BASE_NAME}-#{SHARE_VER}-src-checksum" do
+  it { should exist }
+  it { should be_file }
+  it { should be_mode 0o644 }
+  it { should be_owned_by 'root' }
+  it { should be_grouped_into 'root' }
+end
+
 describe file "/var/chef/cache/#{BASE_NAME}-#{PREV_VER}-src-checksum" do
   it { should exist }
   it { should be_file }
@@ -278,6 +316,14 @@ describe file "/var/chef/cache/#{BASE_NAME}-#{PREV_VER}-src-checksum" do
 end
 
 describe file "/var/chef/cache/#{source_dir(CURR_VER)}/README.rst" do
+  it { should exist }
+  it { should be_file }
+  it { should be_mode 0o644 }
+  it { should be_owned_by 'root' }
+  it { should be_grouped_into 'root' }
+end
+
+describe file "/usr/local/#{BASE_NAME}-bld/#{source_dir(SHARE_VER)}/README.rst" do
   it { should exist }
   it { should be_file }
   it { should be_mode 0o644 }
@@ -317,6 +363,14 @@ describe file "/var/chef/cache/#{source_dir(CURR_VER)}/Makefile" do
   it { should be_grouped_into 'root' }
 end
 
+describe file "/usr/local/#{BASE_NAME}-bld/#{source_dir(SHARE_VER)}/Makefile" do
+  it { should exist }
+  it { should be_file }
+  it { should be_mode 0o644 }
+  it { should be_owned_by 'root' }
+  it { should be_grouped_into 'root' }
+end
+
 describe file "/usr/local/#{BASE_NAME}-bld/#{source_dir(PREV_VER)}/Makefile" do
   it { should exist }
   it { should be_file }
@@ -331,10 +385,10 @@ describe file "/var/chef/cache/#{BASE_NAME}-#{CURR_VER}-config" do
   it { should be_mode 0o644 }
   it { should be_owned_by 'root' }
   it { should be_grouped_into 'root' }
-  its(:content) { should_not match(%r{-I/opt/openssl/1\.1\.1c/include}) } if node['platform_family'] == 'debian'
-  its(:content) { should_not match(%r{-rpath,/opt/openssl/1\.1\.1c/lib}) } if node['platform_family'] == 'debian'
-  its(:content) { should match(%r{-I/opt/openssl/1\.1\.1c/include}) } unless node['platform_family'] == 'debian'
-  its(:content) { should match(%r{-rpath,/opt/openssl/1\.1\.1c/lib}) } unless node['platform_family'] == 'debian'
+  its(:content) { should_not match(%r{-I/opt/openssl/1\.1\.1d/include}) } if node['platform_family'] == 'debian'
+  its(:content) { should_not match(%r{-rpath,/opt/openssl/1\.1\.1d/lib}) } if node['platform_family'] == 'debian'
+  its(:content) { should match(%r{-I/opt/openssl/1\.1\.1d/include}) } unless node['platform_family'] == 'debian'
+  its(:content) { should match(%r{-rpath,/opt/openssl/1\.1\.1d/lib}) } unless node['platform_family'] == 'debian'
   its(:content) { should match(%r{-rpath,/opt/python/#{CURR_VER}}) }
   its(:content) { should match(%r{--prefix=/opt/python/#{CURR_VER}}) }
   its(:content) { should match(%r{--exec_prefix=/opt/python/#{CURR_VER}}) }
@@ -342,20 +396,35 @@ describe file "/var/chef/cache/#{BASE_NAME}-#{CURR_VER}-config" do
   its(:content) { should match(/--enable-optimizations/) }
 end
 
+[
+  "/var/chef/cache/#{BASE_NAME}-#{SHARE_VER}-config",
+  "/var/chef/cache/#{BASE_NAME}-#{PREV_VER}-config"
+].each do |conf|
+  describe file conf do
+    it { should exist }
+    it { should be_file }
+    it { should be_mode 0o644 }
+    it { should be_owned_by 'root' }
+    it { should be_grouped_into 'root' }
+    its(:content) { should match(%r{-I/opt/openssl/1\.1\.1d/include}) }
+    its(:content) { should match(%r{-rpath,/opt/openssl/1\.1\.1d/lib}) }
+    its(:content) { should match(%r{-I/opt/sqlite/3300000/include}) }
+    its(:content) { should match(%r{-rpath,/opt/sqlite/3300000/lib}) }
+    its(:content) { should match(/--enable-shared/) }
+  end
+end
+
+describe file "/var/chef/cache/#{BASE_NAME}-#{SHARE_VER}-config" do
+  its(:content) { should match(%r{-rpath,/usr/local/#{BASE_NAME}/curr/lib}) }
+  its(:content) { should match(%r{--prefix=/usr/local/#{BASE_NAME}/curr}) }
+  its(:content) { should match(%r{--exec_prefix=/usr/local/#{BASE_NAME}/curr}) }
+  its(:content) { should match(/--enable-optimizations/) }
+end
+
 describe file "/var/chef/cache/#{BASE_NAME}-#{PREV_VER}-config" do
-  it { should exist }
-  it { should be_file }
-  it { should be_mode 0o644 }
-  it { should be_owned_by 'root' }
-  it { should be_grouped_into 'root' }
-  its(:content) { should match(%r{-I/opt/openssl/1\.1\.1c/include}) }
-  its(:content) { should match(%r{-rpath,/opt/openssl/1\.1\.1c/lib}) }
-  its(:content) { should match(%r{-I/opt/sqlite/3290000/include}) }
-  its(:content) { should match(%r{-rpath,/opt/sqlite/3290000/lib}) }
-  its(:content) { should match(%r{-rpath,/usr/local/#{BASE_NAME}/lib}) }
-  its(:content) { should match(%r{--prefix=/usr/local/#{BASE_NAME}}) }
-  its(:content) { should match(%r{--exec_prefix=/usr/local/#{BASE_NAME}}) }
-  its(:content) { should match(/--enable-shared/) }
+  its(:content) { should match(%r{-rpath,/usr/local/#{BASE_NAME}/prev/lib}) }
+  its(:content) { should match(%r{--prefix=/usr/local/#{BASE_NAME}/prev}) }
+  its(:content) { should match(%r{--exec_prefix=/usr/local/#{BASE_NAME}/prev}) }
   its(:content) { should_not match(/--enable-optimizations/) }
 end
 
@@ -367,7 +436,15 @@ describe file "/opt/#{BASE_NAME}/#{CURR_VER}/include/#{BASE_NAME}#{CURR_REV}m/py
   it { should be_grouped_into 'root' }
 end
 
-describe file "/usr/local/#{BASE_NAME}/include/#{BASE_NAME}#{PREV_REV}m/pyconfig.h" do
+describe file "/usr/local/#{BASE_NAME}/curr/include/#{BASE_NAME}#{SHARE_REV}m/pyconfig.h" do
+  it { should exist }
+  it { should be_file }
+  it { should be_mode 0o644 }
+  it { should be_owned_by 'root' }
+  it { should be_grouped_into 'root' }
+end
+
+describe file "/usr/local/#{BASE_NAME}/prev/include/#{BASE_NAME}#{PREV_REV}m/pyconfig.h" do
   it { should exist }
   it { should be_file }
   it { should be_mode 0o644 }
@@ -379,7 +456,15 @@ describe file "/opt/#{BASE_NAME}/#{CURR_VER}/lib/lib#{BASE_NAME}3.so" do
   it { should_not exist }
 end
 
-describe file "/usr/local/#{BASE_NAME}/lib/lib#{BASE_NAME}3.so" do
+describe file "/usr/local/#{BASE_NAME}/curr/lib/lib#{BASE_NAME}3.so" do
+  it { should exist }
+  it { should be_file }
+  it { should be_mode 0o555 }
+  it { should be_owned_by 'root' }
+  it { should be_grouped_into 'root' }
+end
+
+describe file "/usr/local/#{BASE_NAME}/prev/lib/lib#{BASE_NAME}3.so" do
   it { should exist }
   it { should be_file }
   it { should be_mode 0o555 }
@@ -395,7 +480,15 @@ describe file "/opt/#{BASE_NAME}/#{CURR_VER}/bin/#{BASE_NAME}#{CURR_REV}" do
   it { should be_grouped_into 'root' }
 end
 
-describe file "/usr/local/#{BASE_NAME}/bin/#{BASE_NAME}#{PREV_REV}" do
+describe file "/usr/local/#{BASE_NAME}/curr/bin/#{BASE_NAME}#{SHARE_REV}" do
+  it { should exist }
+  it { should be_file }
+  it { should be_mode 0o755 }
+  it { should be_owned_by 'root' }
+  it { should be_grouped_into 'root' }
+end
+
+describe file "/usr/local/#{BASE_NAME}/prev/bin/#{BASE_NAME}#{PREV_REV}" do
   it { should exist }
   it { should be_file }
   it { should be_mode 0o755 }
@@ -411,7 +504,15 @@ describe file "/opt/#{BASE_NAME}/#{CURR_VER}/bin/#{BASE_NAME}3" do
   it { should be_grouped_into 'root' }
 end
 
-describe file "/usr/local/#{BASE_NAME}/bin/#{BASE_NAME}3" do
+describe file "/usr/local/#{BASE_NAME}/curr/bin/#{BASE_NAME}3" do
+  it { should exist }
+  it { should be_file }
+  it { should be_mode 0o755 }
+  it { should be_owned_by 'root' }
+  it { should be_grouped_into 'root' }
+end
+
+describe file "/usr/local/#{BASE_NAME}/prev/bin/#{BASE_NAME}3" do
   it { should exist }
   it { should be_file }
   it { should be_mode 0o755 }
@@ -427,7 +528,15 @@ describe file "/opt/#{BASE_NAME}/#{CURR_VER}/bin/#{BASE_NAME}" do
   it { should be_grouped_into 'root' }
 end
 
-describe file "/usr/local/#{BASE_NAME}/bin/#{BASE_NAME}" do
+describe file "/usr/local/#{BASE_NAME}/curr/bin/#{BASE_NAME}" do
+  it { should exist }
+  it { should be_file }
+  it { should be_mode 0o755 }
+  it { should be_owned_by 'root' }
+  it { should be_grouped_into 'root' }
+end
+
+describe file "/usr/local/#{BASE_NAME}/prev/bin/#{BASE_NAME}" do
   it { should exist }
   it { should be_file }
   it { should be_mode 0o755 }
@@ -443,7 +552,15 @@ describe file "/opt/#{BASE_NAME}/#{CURR_VER}/bin/pip#{CURR_REV}" do
   it { should be_grouped_into 'root' }
 end
 
-describe file "/usr/local/#{BASE_NAME}/bin/pip#{PREV_REV}" do
+describe file "/usr/local/#{BASE_NAME}/curr/bin/pip#{SHARE_REV}" do
+  it { should exist }
+  it { should be_file }
+  it { should be_mode 0o755 }
+  it { should be_owned_by 'root' }
+  it { should be_grouped_into 'root' }
+end
+
+describe file "/usr/local/#{BASE_NAME}/prev/bin/pip#{PREV_REV}" do
   it { should exist }
   it { should be_file }
   it { should be_mode 0o755 }
@@ -459,7 +576,15 @@ describe file "/opt/#{BASE_NAME}/#{CURR_VER}/bin/pip3" do
   it { should be_grouped_into 'root' }
 end
 
-describe file "/usr/local/#{BASE_NAME}/bin/pip3" do
+describe file "/usr/local/#{BASE_NAME}/curr/bin/pip3" do
+  it { should exist }
+  it { should be_file }
+  it { should be_mode 0o755 }
+  it { should be_owned_by 'root' }
+  it { should be_grouped_into 'root' }
+end
+
+describe file "/usr/local/#{BASE_NAME}/prev/bin/pip3" do
   it { should exist }
   it { should be_file }
   it { should be_mode 0o755 }
@@ -475,7 +600,15 @@ describe file "/opt/#{BASE_NAME}/#{CURR_VER}/bin/pip" do
   it { should be_grouped_into 'root' }
 end
 
-describe file "/usr/local/#{BASE_NAME}/bin/pip" do
+describe file "/usr/local/#{BASE_NAME}/curr/bin/pip" do
+  it { should exist }
+  it { should be_file }
+  it { should be_mode 0o755 }
+  it { should be_owned_by 'root' }
+  it { should be_grouped_into 'root' }
+end
+
+describe file "/usr/local/#{BASE_NAME}/prev/bin/pip" do
   it { should exist }
   it { should be_file }
   it { should be_mode 0o755 }
@@ -489,7 +622,13 @@ describe bash "/opt/#{BASE_NAME}/#{CURR_VER}/bin/#{BASE_NAME}3 --version" do
   its(:stdout) { should match(/3\.7\.4/) }
 end
 
-describe bash "/usr/local/#{BASE_NAME}/bin/#{BASE_NAME}3 --version" do
+describe bash "/usr/local/#{BASE_NAME}/curr/bin/#{BASE_NAME}3 --version" do
+  its(:exit_status) { should eq 0 }
+  its(:stderr) { should eq '' }
+  its(:stdout) { should match(/3\.7\.3/) }
+end
+
+describe bash "/usr/local/#{BASE_NAME}/prev/bin/#{BASE_NAME}3 --version" do
   its(:exit_status) { should eq 0 }
   its(:stderr) { should eq '' }
   its(:stdout) { should match(/3\.6\.9/) }
@@ -498,24 +637,36 @@ end
 describe bash "/opt/#{BASE_NAME}/#{CURR_VER}/bin/#{BASE_NAME}3 -c 'import ssl; print(ssl.OPENSSL_VERSION)'" do
   its(:exit_status) { should eq 0 }
   its(:stderr) { should eq '' }
-  its(:stdout) { should_not match(/1\.1\.1c/) } if node['platform_family'] == 'debian'
-  its(:stdout) { should match(/1\.1\.1c/) } unless node['platform_family'] == 'debian'
+  its(:stdout) { should_not match(/1\.1\.1d/) } if node['platform_family'] == 'debian'
+  its(:stdout) { should match(/1\.1\.1d/) } unless node['platform_family'] == 'debian'
 end
 
-describe bash "/usr/local/#{BASE_NAME}/bin/#{BASE_NAME}3 -c 'import ssl; print(ssl.OPENSSL_VERSION)'" do
+describe bash "/usr/local/#{BASE_NAME}/curr/bin/#{BASE_NAME}3 -c 'import ssl; print(ssl.OPENSSL_VERSION)'" do
   its(:exit_status) { should eq 0 }
   its(:stderr) { should eq '' }
-  its(:stdout) { should match(/1\.1\.1c/) }
+  its(:stdout) { should match(/1\.1\.1d/) }
+end
+
+describe bash "/usr/local/#{BASE_NAME}/prev/bin/#{BASE_NAME}3 -c 'import ssl; print(ssl.OPENSSL_VERSION)'" do
+  its(:exit_status) { should eq 0 }
+  its(:stderr) { should eq '' }
+  its(:stdout) { should match(/1\.1\.1d/) }
 end
 
 describe bash "/opt/#{BASE_NAME}/#{CURR_VER}/bin/#{BASE_NAME}3 -c 'import sqlite3; print(sqlite3.sqlite_version)'" do
   its(:exit_status) { should eq 0 }
   its(:stderr) { should eq '' }
-  its(:stdout) { should_not match(/3\.29\.0/) } # Different on every distro
+  its(:stdout) { should_not match(/3\.30\.0/) } # Different on every distro
 end
 
-describe bash "/usr/local/#{BASE_NAME}/bin/#{BASE_NAME}3 -c 'import sqlite3; print(sqlite3.sqlite_version)'" do
+describe bash "/usr/local/#{BASE_NAME}/curr/bin/#{BASE_NAME}3 -c 'import sqlite3; print(sqlite3.sqlite_version)'" do
   its(:exit_status) { should eq 0 }
   its(:stderr) { should eq '' }
-  its(:stdout) { should match(/3\.29\.0/) }
+  its(:stdout) { should match(/3\.30\.0/) }
+end
+
+describe bash "/usr/local/#{BASE_NAME}/prev/bin/#{BASE_NAME}3 -c 'import sqlite3; print(sqlite3.sqlite_version)'" do
+  its(:exit_status) { should eq 0 }
+  its(:stderr) { should eq '' }
+  its(:stdout) { should match(/3\.30\.0/) }
 end

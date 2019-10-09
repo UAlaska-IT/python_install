@@ -49,9 +49,13 @@ module PythonInstall
       return File.join(new_resource.install_directory, rel_path_to_python_binary(new_resource))
     end
 
-    def path_to_pip_binary(new_resource)
+    def rel_path_to_pip_binary(new_resource)
       revision = python_revision(new_resource)
-      return File.join(new_resource.install_directory, "bin/pip#{revision}")
+      return "bin/pip#{revision}"
+    end
+
+    def path_to_pip_binary(new_resource)
+      return File.join(new_resource.install_directory, rel_path_to_pip_binary(new_resource))
     end
 
     def make_python_link(new_resource)
@@ -132,6 +136,15 @@ module PythonInstall
       return code
     end
 
+    def generate_system_options
+      code = ''
+      code += ' --with-system-expat'
+      code += ' --with-system-ffi'
+      # We could add EPEL and install mpdecimal-devel
+      code += ' --with-system-libmpdec' if node['platform_family'] == 'debian'
+      return code
+    end
+
     def generate_shared_optimized_options(new_resource)
       code = ''
       code += ' --enable-shared' if new_resource.build_shared
@@ -145,13 +158,14 @@ module PythonInstall
       code = ''
       code += " --prefix=#{new_resource.install_directory}"
       code += " --exec_prefix=#{new_resource.install_directory}"
-      code += ' --with-system-ffi'
+      code += generate_system_options
+      code += ' --with-ensurepip=install'
       code += generate_shared_optimized_options(new_resource)
       return code
     end
   end
 
-  # This module implements helpers that are used for resources
+  # This module implements hooks from source_install
   module Install
     include Source::Install
     include Custom
@@ -192,19 +206,26 @@ module PythonInstall
     end
 
     def install_creates_file(new_resource)
-      return rel_path_to_python_binary(new_resource)
+      # Pip is created after python, so this is more robust
+      return rel_path_to_pip_binary(new_resource)
+    end
+
+    # For optional hooks and common install code see source_install cookbook
+
+    def config_creates_file(_new_resource)
+      return 'Makefile'
     end
 
     def install_command(_new_resource)
-      return 'make altinstall'
+      # Python with shared libs is failing to install binaries after running 'make && make altinstall'
+      # Running 'make altinstall' twice solves the problem?!
+      return 'make altinstall; make altinstall'
     end
 
     def post_install_logic(new_resource)
       make_python_links(new_resource)
       make_pip_links(new_resource)
     end
-
-    # For common install code see source_install cookbook
   end
 end
 
